@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - SECRET_KEY=production-secret-key-change-me
+      - JWT_SECRET_KEY=production-jwt-secret-key-change-me
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - DATABASE_URL=postgresql://neondb_owner:npg_DkGxStjs6N7V@ep-misty-leaf-am593szq-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require
+      - RESEND_API_KEY=${RESEND_API_KEY:-}
+      - RECEIVER_EMAIL=${RECEIVER_EMAIL:-teckhubofficals@gmail.com}
+    restart: unless-stopped

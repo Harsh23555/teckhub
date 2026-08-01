@@ -1,0 +1,560 @@
+{% extends "base.html" %}
+{% block title %}Contact & Support Center — NovaTech AI{% endblock %}
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">24/7 Global Support & Advisory</span>
+    <h1>Contact & <span class="gradient-text">Support Center</span></h1>
+    <p>Have a question or looking to build something ambitious? Reach out directly, request a 1-on-1 meeting, or search our live knowledge base.</p>
+    
+    <div style="display:flex;justify-content:center;gap:.75rem;margin-top:2rem;flex-wrap:wrap;">
+      <button class="btn btn-primary contact-tab-btn active" data-tab="form">✉️ Send Message</button>
+      <button class="btn btn-secondary contact-tab-btn" data-tab="meeting">📅 Schedule Meeting</button>
+      <button class="btn btn-secondary contact-tab-btn" data-tab="faq">❓ Instant FAQ Search</button>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT SECTION -->
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- LEFT COLUMN: CONTACT INFO & CARDS -->
+      <div class="fade-in">
+        <h3 style="margin-bottom:1.5rem">Direct Contact & Offices</h3>
+        
+        <div class="contact-methods">
+
+          <!-- Email Action Button -->
+          <a
+            class="contact-method contact-action has-tooltip"
+            href="mailto:teckhubofficals@gmail.com"
+            aria-label="Send an email to teckhubofficals@gmail.com"
+            title="Send Email"
+            data-tooltip="Send Email"
+            data-contact-email="teckhubofficals@gmail.com"
+          >
+            <span class="method-icon contact-icon contact-icon-email" aria-hidden="true">
+              <i class="fa-solid fa-envelope"></i>
+            </span>
+            <div class="method-info" style="flex:1;">
+              <small>Email Support</small>
+              <span class="method-value">teckhubofficals@gmail.com</span>
+            </div>
+            <span class="contact-action-arrow" aria-hidden="true">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </span>
+          </a>
+
+          <!-- WhatsApp Action Button -->
+          <a
+            class="contact-method contact-action contact-action-whatsapp has-tooltip"
+            href="https://wa.me/919835928274?text=Hello%20TechHub%2C%20I%20need%20assistance."
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open WhatsApp chat for +91 98359 28274"
+            title="Chat on WhatsApp"
+            data-tooltip="Chat on WhatsApp"
+            data-contact-whatsapp="+91 9835928274"
+            data-contact-message="Hello TechHub, I need assistance."
+          >
+            <span class="method-icon contact-icon contact-icon-whatsapp" aria-hidden="true">
+              <i class="fa-brands fa-whatsapp"></i>
+            </span>
+            <div class="method-info" style="flex:1;">
+              <small style="color:var(--success);">Instant Messaging</small>
+              <span class="method-value">Chat on WhatsApp</span>
+            </div>
+            <span class="contact-action-arrow" aria-hidden="true">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </span>
+          </a>
+
+          <!-- Phone Card -->
+          <div class="contact-method contact-static">
+            <span class="method-icon contact-icon contact-icon-phone" aria-hidden="true">
+              <i class="fa-solid fa-phone"></i>
+            </span>
+            <div class="method-info" style="flex:1;">
+              <small>Phone Hotline</small>
+              <a href="tel:+919835928274">+91 98359 28274</a>
+            </div>
+          </div>
+
+          <!-- Headquarters Location -->
+          <div class="contact-method">
+            <span class="method-icon contact-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+            <div class="method-info">
+              <small>Global Delivery Hubs</small>
+              <p style="margin:0;"><strong>HQ:</strong> mumbai, maharashtra — 400001<br/><strong>Global Offices:</strong> Singapore · Dubai</p>
+            </div>
+          </div>
+
+          <!-- Office Hours -->
+          <div class="contact-method">
+            <span class="method-icon contact-icon" aria-hidden="true"><i class="fa-solid fa-clock"></i></span>
+            <div class="method-info">
+              <small>Business Hours</small>
+              <p style="margin:0;">Mon–Fri, 9:00 AM – 7:00 PM IST<br/><span style="color:var(--success);font-size:.78rem;">● 24/7 Emergency Support for SLA Clients</span></p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Interactive Map Widget Preview -->
+        <div style="margin-top:2rem;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg)">
+          <h4 style="margin-bottom:.75rem;font-size:.95rem;display:flex;align-items:center;justify-content:space-between;">
+            <span>🗺️ Bangalore HQ Location</span>
+            <small style="font-family:var(--font-mono);font-size:.7rem;color:var(--violet-light);">Live Map</small>
+          </h4>
+          <div style="background:var(--bg-3);border-radius:var(--radius);height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.85rem;color:var(--text-2);border:1px solid var(--border);text-align:center;padding:1rem;">
+            <div style="font-size:2rem;margin-bottom:.3rem;">📍</div>
+            <strong>NovaTech AI Tech Park</strong>
+            <p style="font-size:.78rem;color:var(--text-3);margin-top:.2rem;">8th Block, Koramangala, Bangalore 560034</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: INTERACTIVE TABS & FORMS -->
+      <div class="contact-form-card fade-in fade-in-delay-1">
+
+        <!-- TAB CONTENT 1: PREMIUM CONTACT FORM -->
+        <div class="contact-tab-content active" id="tab-form">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+            <h3>Send Us a Message</h3>
+            <span id="draftBadge" style="display:none;font-size:.75rem;font-family:var(--font-mono);color:var(--success);background:rgba(34,197,94,0.1);padding:.2rem .6rem;border-radius:100px;">💾 Draft restored</span>
+          </div>
+
+          <form id="contactForm" novalidate>
+            <!-- Honeypot for spam bot prevention -->
+            <input type="text" name="website_url" style="display:none !important;" tabindex="-1" autocomplete="off"/>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Arjun Mehta" required/>
+                <span class="field-error" id="nameError"></span>
+              </div>
+              <div class="form-group">
+                <label for="company">Company Name</label>
+                <input type="text" id="company" name="company" class="form-control" placeholder="Acme Technologies"/>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="you@company.com" required/>
+                <span class="field-error" id="emailError"></span>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone / WhatsApp Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="+91 98765 43210"/>
+                <span class="field-error" id="phoneError"></span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="country">Country</label>
+                <select id="country" name="country" class="form-control">
+                  <option value="">— Select Country —</option>
+                  <option>India</option>
+                  <option>United States</option>
+                  <option>United Kingdom</option>
+                  <option>Singapore</option>
+                  <option>United Arab Emirates</option>
+                  <option>Australia</option>
+                  <option>Germany</option>
+                  <option>Canada</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="service">Service Interested In</label>
+                <select id="service" name="service" class="form-control">
+                  <option value="">— Select a service —</option>
+                  <option>Custom Software Development</option>
+                  <option>Web & Mobile App Development</option>
+                  <option>AI & Machine Learning</option>
+                  <option>Cloud Computing & Migration</option>
+                  <option>DevOps & CI/CD</option>
+                  <option>UI/UX Design</option>
+                  <option>API Design & Integration</option>
+                  <option>Cybersecurity</option>
+                  <option>Blockchain Development</option>
+                  <option>SaaS Solutions</option>
+                  <option>ERP / CRM Development</option>
+                  <option>IT Consulting</option>
+                  <option>Software Maintenance</option>
+                  <option>Other / Custom Inquiry</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="budget">Approximate Budget</label>
+                <select id="budget" name="budget" class="form-control">
+                  <option value="">— Select range —</option>
+                  <option>Under 10,000</option>
+                  <option>10,000 – 50,000</option>
+                  <option>50,000 – 150,000</option>
+                  <option>150,000 – 500,000</option>
+                  <option>500,000+</option>
+                  <option>Not sure yet</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="timeline">Expected Timeline</label>
+                <select id="timeline" name="timeline" class="form-control">
+                  <option value="">— Select timeline —</option>
+                  <option>Immediate (< 1 month)</option>
+                  <option>1 – 3 months</option>
+                  <option>3 – 6 months</option>
+                  <option>Flexible / Planning phase</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Your Project Details / Message *</label>
+              <textarea id="message" name="message" class="form-control" placeholder="Tell us about your project requirements, goals, and tech stack expectations..." rows="4" required></textarea>
+              <span class="field-error" id="messageError"></span>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary" style="width:100%;justify-content:center;">
+              <span class="btn-text">Submit Request →</span>
+              <span class="spinner hidden"></span>
+            </button>
+            <div id="formMsg" class="form-msg"></div>
+          </form>
+        </div>
+
+        <!-- TAB CONTENT 2: MEETING REQUEST FORM -->
+        <div class="contact-tab-content hidden" id="tab-meeting">
+          <h3 style="margin-bottom:.5rem;">Schedule a 1-on-1 Discovery Call</h3>
+          <p style="font-size:.85rem;margin-bottom:1.5rem;">Pick a date and preferred time slot for a private consultation with our engineering architects.</p>
+
+          <form id="meetingForm" novalidate>
+            <input type="text" name="website_url" style="display:none !important;" tabindex="-1"/>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="m_name">Full Name *</label>
+                <input type="text" id="m_name" name="name" class="form-control" placeholder="Arjun Mehta" required/>
+              </div>
+              <div class="form-group">
+                <label for="m_email">Email Address *</label>
+                <input type="email" id="m_email" name="email" class="form-control" placeholder="you@company.com" required/>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="m_phone">Phone / WhatsApp</label>
+                <input type="tel" id="m_phone" name="phone" class="form-control" placeholder="+91 98765 43210"/>
+              </div>
+              <div class="form-group">
+                <label for="m_date">Preferred Date *</label>
+                <input type="date" id="m_date" name="preferred_date" class="form-control" required/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="m_time">Preferred Time Slot *</label>
+              <select id="m_time" name="preferred_time" class="form-control" required>
+                <option value="">— Select Slot (IST) —</option>
+                <option>10:00 AM – 10:45 AM IST</option>
+                <option>02:00 PM – 02:45 PM IST</option>
+                <option>04:00 PM – 04:45 PM IST</option>
+                <option>06:00 PM – 06:45 PM IST</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="m_topic">Meeting Agenda / Topic</label>
+              <textarea id="m_topic" name="topic" class="form-control" placeholder="Briefly describe what you'd like to discuss during the call..." rows="3"></textarea>
+            </div>
+
+            <button type="submit" id="meetingSubmitBtn" class="btn btn-primary" style="width:100%;justify-content:center;">
+              Request Meeting Slot →
+            </button>
+            <div id="meetingMsg" class="form-msg"></div>
+          </form>
+        </div>
+
+        <!-- TAB CONTENT 3: INSTANT FAQ SEARCH ENGINE -->
+        <div class="contact-tab-content hidden" id="tab-faq">
+          <h3 style="margin-bottom:.5rem;">Search Support Knowledge Base</h3>
+          <p style="font-size:.85rem;margin-bottom:1.25rem;">Type any question below to get instant answers without waiting.</p>
+
+          <div style="position:relative;margin-bottom:1.5rem;">
+            <input type="text" id="faqSearchInput" class="form-control" placeholder="🔍 Search FAQs (e.g. pricing, NDA, timeline, support)..." style="padding-left:1rem;font-size:1rem;height:48px;" />
+          </div>
+
+          <!-- Category filter pills -->
+          <div class="faq-categories" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+            <button class="filter-btn faq-cat-pill active" data-cat="all">All Questions</button>
+            <button class="filter-btn faq-cat-pill" data-cat="General">General</button>
+            <button class="filter-btn faq-cat-pill" data-cat="Services">Services</button>
+            <button class="filter-btn faq-cat-pill" data-cat="Pricing">Pricing</button>
+            <button class="filter-btn faq-cat-pill" data-cat="Technical">Technical</button>
+            <button class="filter-btn faq-cat-pill" data-cat="Support">Support</button>
+          </div>
+
+          <!-- FAQ Accordion List -->
+          <div class="faq-list" id="faqAccordionList">
+            {% for f in faqs %}
+            <div class="faq-item" data-category="{{ f.category }}">
+              <button class="faq-q">
+                <span>{{ f.question }}</span>
+                <span class="faq-arrow">▼</span>
+              </button>
+              <div class="faq-a">
+                <p>{{ f.answer }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <p id="noFaqResults" style="display:none;text-align:center;padding:2rem;color:var(--text-3);">No matching FAQs found. Try a different keyword or contact our support team!</p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SUCCESS TICKET MODAL -->
+<div class="modal" id="ticketModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:2000;align-items:center;justify-content:center;padding:1rem;">
+  <div class="card card-glass fade-in" style="max-width:480px;width:100%;padding:2.5rem;text-align:center;position:relative;">
+    <button id="closeTicketModal" style="position:absolute;top:1rem;right:1rem;font-size:1.25rem;cursor:pointer;">✕</button>
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(34,197,94,0.15);border:2px solid var(--success);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.25rem;color:var(--success);">✓</div>
+    <h2 style="font-size:1.5rem;margin-bottom:.5rem;">Message Received!</h2>
+    <p style="font-size:.9rem;color:var(--text-2);margin-bottom:1.5rem;">Your enquiry has been logged into our support database.</p>
+    
+    <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1.5rem;font-family:var(--font-mono);font-size:.9rem;">
+      <small style="color:var(--text-3);display:block;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem;">Support Ticket Reference</small>
+      <strong id="modalTicketId" class="gradient-text" style="font-size:1.2rem;">NT-2026-XXXXXX</strong>
+    </div>
+
+    <p style="font-size:.82rem;color:var(--text-3);margin-bottom:1.5rem;">A confirmation log has been dispatched to your email. Our advisory team will respond within 24 hours.</p>
+    <button class="btn btn-primary" id="modalOkBtn" style="width:100%;justify-content:center;">Got It</button>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // ── 1. Contact Page Main Tabs Switcher ─────────────────────────────────────
+  const tabBtns = document.querySelectorAll('.contact-tab-btn');
+  const tabContents = document.querySelectorAll('.contact-tab-content');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => { b.classList.remove('active', 'btn-primary'); b.classList.add('btn-secondary'); });
+      tabContents.forEach(c => c.classList.add('hidden'));
+      
+      btn.classList.remove('btn-secondary');
+      btn.classList.add('active', 'btn-primary');
+      
+      const tabId = btn.dataset.tab;
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+    });
+  });
+
+  // ── 2. Contact Form Auto-Save Draft to LocalStorage ─────────────────────────
+  const cForm = document.getElementById('contactForm');
+  const DRAFT_KEY = 'novatech_contact_draft';
+  const draftBadge = document.getElementById('draftBadge');
+
+  // Load draft if available
+  const savedDraft = localStorage.getItem(DRAFT_KEY);
+  if (savedDraft) {
+    try {
+      const data = JSON.parse(savedDraft);
+      Object.keys(data).forEach(key => {
+        const input = cForm.querySelector(`[name="${key}"]`);
+        if (input) input.value = data[key];
+      });
+      if (draftBadge) draftBadge.style.display = 'inline-block';
+    } catch(e){}
+  }
+
+  // Save input changes to draft
+  cForm.addEventListener('input', () => {
+    const formData = new FormData(cForm);
+    const obj = {};
+    formData.forEach((val, key) => { if(key !== 'website_url') obj[key] = val; });
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(obj));
+  });
+
+  // ── 3. One-Click Copy Buttons ──────────────────────────────────────────────
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.dataset.copy;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      });
+    });
+  });
+
+  // ── 4. Contact Form Validation & Submission ─────────────────────────────────
+  const nameInp = document.getElementById('name');
+  const emailInp = document.getElementById('email');
+  const phoneInp = document.getElementById('phone');
+  const msgInp = document.getElementById('message');
+  const submitBtn = document.getElementById('submitBtn');
+  const formMsg = document.getElementById('formMsg');
+
+  function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+  function validatePhone(p) { return !p || /^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/.test(p); }
+
+  cForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    let valid = true;
+
+    // Reset error styling
+    document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+
+    if (!nameInp.value.trim()) {
+      document.getElementById('nameError').textContent = 'Please enter your full name.';
+      valid = false;
+    }
+    if (!emailInp.value.trim() || !validateEmail(emailInp.value.trim())) {
+      document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+      valid = false;
+    }
+    if (phoneInp.value.trim() && !validatePhone(phoneInp.value.trim())) {
+      document.getElementById('phoneError').textContent = 'Please enter a valid phone number.';
+      valid = false;
+    }
+    if (!msgInp.value.trim()) {
+      document.getElementById('messageError').textContent = 'Please write a brief message.';
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    // Disable button & show spinner
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.btn-text').textContent = 'Submitting...';
+
+    try {
+      const res = await fetch('/contact', { method: 'POST', body: new FormData(cForm) });
+      const data = await res.json();
+
+      if (data.ok) {
+        // Clear draft
+        localStorage.removeItem(DRAFT_KEY);
+        if (draftBadge) draftBadge.style.display = 'none';
+        cForm.reset();
+
+        // Show Ticket Modal
+        document.getElementById('modalTicketId').textContent = data.ticket_id;
+        document.getElementById('ticketModal').style.display = 'flex';
+
+        formMsg.className = 'form-msg success';
+        formMsg.textContent = data.message;
+      } else {
+        formMsg.className = 'form-msg error';
+        formMsg.textContent = data.error || 'Submission failed.';
+      }
+    } catch (err) {
+      formMsg.className = 'form-msg error';
+      formMsg.textContent = 'Server connection error. Please try again.';
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.querySelector('.btn-text').textContent = 'Submit Request →';
+  });
+
+  // Modal Close Listeners
+  document.getElementById('closeTicketModal')?.addEventListener('click', () => {
+    document.getElementById('ticketModal').style.display = 'none';
+  });
+  document.getElementById('modalOkBtn')?.addEventListener('click', () => {
+    document.getElementById('ticketModal').style.display = 'none';
+  });
+
+  // ── 5. Meeting Request Form Submission ──────────────────────────────────────
+  const mForm = document.getElementById('meetingForm');
+  const mSubmitBtn = document.getElementById('meetingSubmitBtn');
+  const mMsg = document.getElementById('meetingMsg');
+
+  mForm?.addEventListener('submit', async e => {
+    e.preventDefault();
+    mSubmitBtn.disabled = true;
+    mSubmitBtn.textContent = 'Scheduling...';
+
+    try {
+      const res = await fetch('/meeting/request', { method: 'POST', body: new FormData(mForm) });
+      const data = await res.json();
+      mMsg.className = 'form-msg ' + (data.ok ? 'success' : 'error');
+      mMsg.textContent = data.ok ? data.message : data.error;
+      if (data.ok) mForm.reset();
+    } catch {
+      mMsg.className = 'form-msg error';
+      mMsg.textContent = 'Connection error. Please try again.';
+    }
+    mSubmitBtn.disabled = false;
+    mSubmitBtn.textContent = 'Request Meeting Slot →';
+  });
+
+  // ── 6. Instant Live FAQ Search Engine & Category Filter ────────────────────
+  const searchInput = document.getElementById('faqSearchInput');
+  const faqItems = document.querySelectorAll('#faqAccordionList .faq-item');
+  const catPills = document.querySelectorAll('.faq-cat-pill');
+  const noFaqMsg = document.getElementById('noFaqResults');
+
+  let activeCat = 'all';
+
+  function filterFaqs() {
+    const q = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    faqItems.forEach(item => {
+      const cat = item.dataset.category;
+      const text = item.textContent.toLowerCase();
+      const catMatch = (activeCat === 'all' || cat === activeCat);
+      const textMatch = (!q || text.includes(q));
+
+      if (catMatch && textMatch) {
+        item.style.display = '';
+        visibleCount++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    if (noFaqMsg) noFaqMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+  }
+
+  searchInput?.addEventListener('input', filterFaqs);
+
+  catPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      catPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeCat = pill.dataset.cat;
+      filterFaqs();
+    });
+  });
+});
+</script>
+
+<style>
+.field-error { font-size:.78rem; color:var(--danger); display:block; margin-top:.2rem; min-height:1rem; }
+.contact-tab-content.hidden { display:none; }
+.admin-panel.hidden { display:none; }
+</style>
+{% endblock %}

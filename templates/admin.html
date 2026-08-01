@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero" style="padding-bottom:2rem;">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+    <div style="text-align:left;">
+      <span class="section-label">Control Panel</span>
+      <h1>Admin <span class="gradient-text">Dashboard</span></h1>
+      <p style="margin:0;">Manage contact leads, meeting slots, FAQs, and AI chatbot knowledge base.</p>
+    </div>
+    <div>
+      <a href="{{ url_for('admin_logout') }}" class="btn btn-secondary btn-sm">🔒 Logout ({{ admin_username }})</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+
+    <!-- Stats Overview Grid -->
+    <div class="stats-grid mb-4" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));">
+      <div class="stat-cell">
+        <span class="val gradient-text">{{ stats.total_contacts }}</span>
+        <span class="lbl">Total Enquiries</span>
+      </div>
+      <div class="stat-cell">
+        <span class="val" style="color:var(--cyan);">{{ stats.new_contacts }}</span>
+        <span class="lbl">New Leads</span>
+      </div>
+      <div class="stat-cell">
+        <span class="val" style="color:var(--warning);">{{ stats.pending_meetings }}</span>
+        <span class="lbl">Pending Meetings</span>
+      </div>
+      <div class="stat-cell">
+        <span class="val" style="color:var(--violet-light);">{{ stats.total_faqs }}</span>
+        <span class="lbl">Active FAQs</span>
+      </div>
+      <div class="stat-cell">
+        <span class="val" style="color:var(--success);">{{ stats.total_keywords }}</span>
+        <span class="lbl">Chat Keywords</span>
+      </div>
+    </div>
+
+    <!-- Admin Navigation Tabs -->
+    <div class="admin-tabs" style="display:flex;gap:.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:.5rem;overflow-x:auto;">
+      <button class="tech-tab active" data-tab="contacts">📩 Enquiries ({{ contacts|length }})</button>
+      <button class="tech-tab" data-tab="meetings">📅 Meetings ({{ meetings|length }})</button>
+      <button class="tech-tab" data-tab="faqs">❓ FAQ Manager ({{ faqs|length }})</button>
+      <button class="tech-tab" data-tab="knowledge">🤖 Chat Knowledge ({{ knowledge|length }})</button>
+      <button class="tech-tab" data-tab="email_logs">✉️ Email Logs ({{ email_logs|length }})</button>
+    </div>
+
+    <!-- TAB 1: CONTACT ENQUIRIES -->
+    <div class="admin-panel active" id="panel-contacts">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:1rem;">
+        <h3>Customer Enquiries & Leads</h3>
+        <input type="text" id="searchContactsInput" class="form-control" placeholder="Search by name, email, ticket..." style="max-width:280px;padding:.4rem .8rem;" />
+      </div>
+
+      <div style="overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);">
+        <table style="width:100%;border-collapse:collapse;text-align:left;font-size:.875rem;">
+          <thead>
+            <tr style="background:var(--bg-2);border-bottom:1px solid var(--border);color:var(--text-3);font-family:var(--font-mono);font-size:.75rem;text-transform:uppercase;">
+              <th style="padding:1rem;">Ticket ID</th>
+              <th style="padding:1rem;">Contact Info</th>
+              <th style="padding:1rem;">Service & Budget</th>
+              <th style="padding:1rem;">Message Snippet</th>
+              <th style="padding:1rem;">Status</th>
+              <th style="padding:1rem;">Date</th>
+              <th style="padding:1rem;text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="contactsTableBody">
+            {% for c in contacts %}
+            <tr style="border-bottom:1px solid var(--border);" class="contact-row" data-search="{{ c.ticket_id }} {{ c.name }} {{ c.email }} {{ c.service }} {{ c.message }}">
+              <td style="padding:1rem;font-family:var(--font-mono);font-size:.8rem;color:var(--violet-light);">{{ c.ticket_id }}</td>
+              <td style="padding:1rem;">
+                <strong>{{ c.name }}</strong><br/>
+                <small style="color:var(--text-3);">{{ c.email }}</small>
+                {% if c.phone %}<br/><small style="color:var(--text-3);">📞 {{ c.phone }}</small>{% endif %}
+                {% if c.company %}<br/><small style="color:var(--text-3);">🏢 {{ c.company }}</small>{% endif %}
+              </td>
+              <td style="padding:1rem;">
+                <span class="tag" style="background:var(--violet-dim);color:var(--violet-light);">{{ c.service or 'General' }}</span><br/>
+                <small style="color:var(--text-3);">Budget: {{ c.budget or 'N/A' }}</small>
+              </td>
+              <td style="padding:1rem;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ c.message }}">
+                {{ c.message }}
+              </td>
+              <td style="padding:1rem;">
+                <select class="form-control status-select" data-id="{{ c.id }}" data-type="contact" style="padding:.3rem .5rem;font-size:.78rem;border-radius:6px;">
+                  <option value="New" {% if c.status=='New' %}selected{% endif %}>🟢 New</option>
+                  <option value="In Progress" {% if c.status=='In Progress' %}selected{% endif %}>🟡 In Progress</option>
+                  <option value="Replied" {% if c.status=='Replied' %}selected{% endif %}>🔵 Replied</option>
+                  <option value="Archived" {% if c.status=='Archived' %}selected{% endif %}>⚪ Archived</option>
+                </select>
+              </td>
+              <td style="padding:1rem;font-size:.78rem;color:var(--text-3);">{{ c.created_at }}</td>
+              <td style="padding:1rem;text-align:right;white-space:nowrap;">
+                <button class="btn btn-secondary btn-sm view-contact-btn" data-json='{{ c|tojson }}' style="padding:.3rem .6rem;font-size:.75rem;">View</button>
+                <button class="btn btn-ghost btn-sm delete-btn" data-id="{{ c.id }}" data-type="contact" style="padding:.3rem .6rem;font-size:.75rem;color:var(--danger);">Delete</button>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" style="padding:2rem;text-align:center;color:var(--text-3);">No enquiries found in database.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: MEETING REQUESTS -->
+    <div class="admin-panel hidden" id="panel-meetings">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h3>Scheduled Meeting Requests</h3>
+      </div>
+      <div style="overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);">
+        <table style="width:100%;border-collapse:collapse;text-align:left;font-size:.875rem;">
+          <thead>
+            <tr style="background:var(--bg-2);border-bottom:1px solid var(--border);color:var(--text-3);font-family:var(--font-mono);font-size:.75rem;text-transform:uppercase;">
+              <th style="padding:1rem;">Ticket ID</th>
+              <th style="padding:1rem;">Visitor</th>
+              <th style="padding:1rem;">Slot Requested</th>
+              <th style="padding:1rem;">Topic / Message</th>
+              <th style="padding:1rem;">Status</th>
+              <th style="padding:1rem;text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in meetings %}
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:1rem;font-family:var(--font-mono);font-size:.8rem;color:var(--cyan);">{{ m.ticket_id }}</td>
+              <td style="padding:1rem;">
+                <strong>{{ m.name }}</strong><br/>
+                <small style="color:var(--text-3);">{{ m.email }}</small>
+                {% if m.phone %}<br/><small style="color:var(--text-3);">📞 {{ m.phone }}</small>{% endif %}
+              </td>
+              <td style="padding:1rem;">
+                📅 <strong>{{ m.preferred_date }}</strong><br/>
+                ⏰ <small style="color:var(--text-3);">{{ m.preferred_time }}</small>
+              </td>
+              <td style="padding:1rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;" title="{{ m.topic or 'N/A' }}">
+                {{ m.topic or 'No notes provided' }}
+              </td>
+              <td style="padding:1rem;">
+                <select class="form-control status-select" data-id="{{ m.id }}" data-type="meeting" style="padding:.3rem .5rem;font-size:.78rem;border-radius:6px;">
+                  <option value="Pending" {% if m.status=='Pending' %}selected{% endif %}>🟡 Pending</option>
+                  <option value="Approved" {% if m.status=='Approved' %}selected{% endif %}>🟢 Approved</option>
+                  <option value="Rejected" {% if m.status=='Rejected' %}selected{% endif %}>🔴 Rejected</option>
+                  <option value="Completed" {% if m.status=='Completed' %}selected{% endif %}>🔵 Completed</option>
+                </select>
+              </td>
+              <td style="padding:1rem;text-align:right;">
+                <button class="btn btn-ghost btn-sm delete-btn" data-id="{{ m.id }}" data-type="meeting" style="padding:.3rem .6rem;font-size:.75rem;color:var(--danger);">Delete</button>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--text-3);">No meeting requests yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: FAQ MANAGER -->
+    <div class="admin-panel hidden" id="panel-faqs">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h3>Knowledge Base FAQs</h3>
+        <button class="btn btn-primary btn-sm" id="addNewFaqBtn">+ Add New FAQ</button>
+      </div>
+      <div style="display:grid;gap:1rem;">
+        {% for f in faqs %}
+        <div class="card" style="display:flex;justify-content:space-between;align-items:start;gap:1rem;padding:1.25rem;">
+          <div>
+            <span class="tag mb-1" style="background:var(--violet-dim);color:var(--violet-light);">{{ f.category }}</span>
+            <h4 style="margin-top:.3rem;margin-bottom:.4rem;font-size:1rem;">{{ f.question }}</h4>
+            <p style="font-size:.875rem;margin:0;">{{ f.answer }}</p>
+          </div>
+          <div style="display:flex;gap:.5rem;flex-shrink:0;">
+            <button class="btn btn-secondary btn-sm edit-faq-btn" data-json='{{ f|tojson }}' style="padding:.3rem .6rem;font-size:.75rem;">Edit</button>
+            <button class="btn btn-ghost btn-sm delete-btn" data-id="{{ f.id }}" data-type="faq" style="padding:.3rem .6rem;font-size:.75rem;color:var(--danger);">Delete</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- TAB 4: CHAT KNOWLEDGE BASE -->
+    <div class="admin-panel hidden" id="panel-knowledge">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h3>Rule-Based Chatbot Knowledge</h3>
+        <button class="btn btn-primary btn-sm" id="addNewKnowledgeBtn">+ Add Keyword Response</button>
+      </div>
+      <div style="overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);">
+        <table style="width:100%;border-collapse:collapse;text-align:left;font-size:.875rem;">
+          <thead>
+            <tr style="background:var(--bg-2);border-bottom:1px solid var(--border);color:var(--text-3);font-family:var(--font-mono);font-size:.75rem;text-transform:uppercase;">
+              <th style="padding:1rem;">Keyword / Trigger</th>
+              <th style="padding:1rem;">Chatbot Response</th>
+              <th style="padding:1rem;text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for k in knowledge %}
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:1rem;font-family:var(--font-mono);font-size:.85rem;color:var(--cyan);font-weight:600;">
+                <code>{{ k.keyword }}</code>
+              </td>
+              <td style="padding:1rem;">{{ k.response }}</td>
+              <td style="padding:1rem;text-align:right;white-space:nowrap;">
+                <button class="btn btn-secondary btn-sm edit-knowledge-btn" data-json='{{ k|tojson }}' style="padding:.3rem .6rem;font-size:.75rem;">Edit</button>
+                <button class="btn btn-ghost btn-sm delete-btn" data-id="{{ k.id }}" data-type="knowledge" style="padding:.3rem .6rem;font-size:.75rem;color:var(--danger);">Delete</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 5: EMAIL LOGS -->
+    <div class="admin-panel hidden" id="panel-email_logs">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h3>System Notification & Email Dispatch Logs</h3>
+      </div>
+      <div style="overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);">
+        <table style="width:100%;border-collapse:collapse;text-align:left;font-size:.875rem;">
+          <thead>
+            <tr style="background:var(--bg-2);border-bottom:1px solid var(--border);color:var(--text-3);font-family:var(--font-mono);font-size:.75rem;text-transform:uppercase;">
+              <th style="padding:1rem;">ID</th>
+              <th style="padding:1rem;">Recipient</th>
+              <th style="padding:1rem;">Subject</th>
+              <th style="padding:1rem;">Sent Timestamp</th>
+              <th style="padding:1rem;text-align:right;">Content</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in email_logs %}
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:1rem;font-family:var(--font-mono);font-size:.8rem;">#{{ log.id }}</td>
+              <td style="padding:1rem;font-weight:600;">{{ log.recipient }}</td>
+              <td style="padding:1rem;color:var(--violet-light);">{{ log.subject }}</td>
+              <td style="padding:1rem;font-size:.78rem;color:var(--text-3);">{{ log.sent_at }}</td>
+              <td style="padding:1rem;text-align:right;">
+                <button class="btn btn-secondary btn-sm view-email-btn" data-body="{{ log.body|e }}" style="padding:.3rem .6rem;font-size:.75rem;">View Email</button>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--text-3);">No email logs registered yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODALS -->
+<!-- Modal: Contact Details -->
+<div class="modal" id="contactModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;align-items:center;justify-content:center;padding:1rem;">
+  <div class="card card-glass" style="max-width:550px;width:100%;padding:2rem;position:relative;max-height:90vh;overflow-y:auto;">
+    <button class="modal-close" id="closeContactModal" style="position:absolute;top:1rem;right:1rem;font-size:1.25rem;">✕</button>
+    <h3 style="margin-bottom:1rem;">Enquiry Details</h3>
+    <div id="contactModalContent"></div>
+  </div>
+</div>
+
+<!-- Modal: FAQ Edit/Add -->
+<div class="modal" id="faqModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;align-items:center;justify-content:center;padding:1rem;">
+  <div class="card card-glass" style="max-width:500px;width:100%;padding:2rem;position:relative;">
+    <button class="modal-close" id="closeFaqModal" style="position:absolute;top:1rem;right:1rem;font-size:1.25rem;">✕</button>
+    <h3 id="faqModalTitle" style="margin-bottom:1rem;">Add FAQ</h3>
+    <form id="faqForm">
+      <input type="hidden" name="id" id="faqId"/>
+      <div class="form-group">
+        <label>Category</label>
+        <select name="category" id="faqCategory" class="form-control" required>
+          <option>General</option>
+          <option>Services</option>
+          <option>Pricing</option>
+          <option>Technical</option>
+          <option>Support</option>
+          <option>Process</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Question</label>
+        <input type="text" name="question" id="faqQuestion" class="form-control" required placeholder="e.g. Do you sign NDAs?"/>
+      </div>
+      <div class="form-group">
+        <label>Answer</label>
+        <textarea name="answer" id="faqAnswer" class="form-control" rows="4" required placeholder="Detailed response..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:.5rem;">Save FAQ</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Chat Knowledge Edit/Add -->
+<div class="modal" id="knowledgeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;align-items:center;justify-content:center;padding:1rem;">
+  <div class="card card-glass" style="max-width:500px;width:100%;padding:2rem;position:relative;">
+    <button class="modal-close" id="closeKnowledgeModal" style="position:absolute;top:1rem;right:1rem;font-size:1.25rem;">✕</button>
+    <h3 id="knowledgeModalTitle" style="margin-bottom:1rem;">Add Chatbot Keyword Response</h3>
+    <form id="knowledgeForm">
+      <input type="hidden" name="id" id="knowledgeId"/>
+      <div class="form-group">
+        <label>Keyword / Trigger</label>
+        <input type="text" name="keyword" id="knowledgeKeyword" class="form-control" required placeholder="e.g. pricing, mobile app, location"/>
+      </div>
+      <div class="form-group">
+        <label>Response</label>
+        <textarea name="response" id="knowledgeResponse" class="form-control" rows="4" required placeholder="Chatbot answer when keyword is mentioned..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:.5rem;">Save Keyword Response</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Admin Tabs Switcher
+  const tabs = document.querySelectorAll('.admin-tabs .tech-tab');
+  const panels = document.querySelectorAll('.admin-panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.add('hidden'));
+      tab.classList.add('active');
+      const target = tab.dataset.tab;
+      document.getElementById(`panel-${target}`).classList.remove('hidden');
+    });
+  });
+
+  // Search Enquiries Table
+  document.getElementById('searchContactsInput')?.addEventListener('input', e => {
+    const val = e.target.value.toLowerCase();
+    document.querySelectorAll('#contactsTableBody tr').forEach(row => {
+      const text = row.dataset.search?.toLowerCase() || '';
+      row.style.display = text.includes(val) ? '' : 'none';
+    });
+  });
+
+  // Update Status for Contact / Meeting
+  document.querySelectorAll('.status-select').forEach(sel => {
+    sel.addEventListener('change', async () => {
+      const id = sel.dataset.id;
+      const type = sel.dataset.type;
+      const status = sel.value;
+      const url = type === 'contact' ? '/admin/contact/status' : '/admin/meeting/status';
+      const fd = new FormData();
+      fd.append('id', id);
+      fd.append('status', status);
+      await fetch(url, { method: 'POST', body: fd });
+    });
+  });
+
+  // Delete Action
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to delete this record?')) return;
+      const id = btn.dataset.id;
+      const type = btn.dataset.type;
+      let url = '';
+      if (type === 'contact') url = '/admin/contact/delete';
+      else if (type === 'meeting') url = '/admin/meeting/delete';
+      else if (type === 'faq') url = '/admin/faq/delete';
+      else if (type === 'knowledge') url = '/admin/chat-knowledge/delete';
+
+      const fd = new FormData();
+      fd.append('id', id);
+      const res = await fetch(url, { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.ok) location.reload();
+    });
+  });
+
+  // View Contact Modal
+  document.querySelectorAll('.view-contact-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const data = JSON.parse(btn.dataset.json);
+      const modal = document.getElementById('contactModal');
+      const content = document.getElementById('contactModalContent');
+      content.innerHTML = `
+        <div style="font-family:var(--font-mono);font-size:.8rem;color:var(--violet-light);margin-bottom:.5rem;">Ticket: ${data.ticket_id}</div>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone || 'N/A'}</p>
+        <p><strong>Company:</strong> ${data.company || 'N/A'}</p>
+        <p><strong>Country:</strong> ${data.country || 'N/A'}</p>
+        <p><strong>Service:</strong> ${data.service || 'N/A'}</p>
+        <p><strong>Budget:</strong> ${data.budget || 'N/A'}</p>
+        <p><strong>Timeline:</strong> ${data.timeline || 'N/A'}</p>
+        <p><strong>Date:</strong> ${data.created_at}</p>
+        <div style="margin-top:1rem;padding:1rem;background:var(--bg-3);border-radius:var(--radius);border:1px solid var(--border);">
+          <strong>Message:</strong><br/>
+          <p style="white-space:pre-wrap;margin-top:.5rem;color:var(--text);">${data.message}</p>
+        </div>
+      `;
+      modal.style.display = 'flex';
+    });
+  });
+  document.getElementById('closeContactModal')?.addEventListener('click', () => {
+    document.getElementById('contactModal').style.display = 'none';
+  });
+
+  // View Email Modal
+  document.querySelectorAll('.view-email-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const body = btn.dataset.body;
+      alert("--- EMAIL CONTENT ---\n\n" + body);
+    });
+  });
+
+  // FAQ Modal Add & Edit
+  const faqModal = document.getElementById('faqModal');
+  document.getElementById('addNewFaqBtn')?.addEventListener('click', () => {
+    document.getElementById('faqModalTitle').textContent = 'Add New FAQ';
+    document.getElementById('faqId').value = '';
+    document.getElementById('faqQuestion').value = '';
+    document.getElementById('faqAnswer').value = '';
+    faqModal.style.display = 'flex';
+  });
+  document.querySelectorAll('.edit-faq-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const data = JSON.parse(btn.dataset.json);
+      document.getElementById('faqModalTitle').textContent = 'Edit FAQ';
+      document.getElementById('faqId').value = data.id;
+      document.getElementById('faqCategory').value = data.category;
+      document.getElementById('faqQuestion').value = data.question;
+      document.getElementById('faqAnswer').value = data.answer;
+      faqModal.style.display = 'flex';
+    });
+  });
+  document.getElementById('closeFaqModal')?.addEventListener('click', () => { faqModal.style.display = 'none'; });
+  document.getElementById('faqForm')?.addEventListener('submit', async e => {
+    e.preventDefault();
+    const res = await fetch('/admin/faq/save', { method: 'POST', body: new FormData(e.target) });
+    const data = await res.json();
+    if (data.ok) location.reload();
+    else alert(data.error);
+  });
+
+  // Knowledge Modal Add & Edit
+  const knowledgeModal = document.getElementById('knowledgeModal');
+  document.getElementById('addNewKnowledgeBtn')?.addEventListener('click', () => {
+    document.getElementById('knowledgeModalTitle').textContent = 'Add Keyword Response';
+    document.getElementById('knowledgeId').value = '';
+    document.getElementById('knowledgeKeyword').value = '';
+    document.getElementById('knowledgeResponse').value = '';
+    knowledgeModal.style.display = 'flex';
+  });
+  document.querySelectorAll('.edit-knowledge-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const data = JSON.parse(btn.dataset.json);
+      document.getElementById('knowledgeModalTitle').textContent = 'Edit Keyword Response';
+      document.getElementById('knowledgeId').value = data.id;
+      document.getElementById('knowledgeKeyword').value = data.keyword;
+      document.getElementById('knowledgeResponse').value = data.response;
+      knowledgeModal.style.display = 'flex';
+    });
+  });
+  document.getElementById('closeKnowledgeModal')?.addEventListener('click', () => { knowledgeModal.style.display = 'none'; });
+  document.getElementById('knowledgeForm')?.addEventListener('submit', async e => {
+    e.preventDefault();
+    const res = await fetch('/admin/chat-knowledge/save', { method: 'POST', body: new FormData(e.target) });
+    const data = await res.json();
+    if (data.ok) location.reload();
+    else alert(data.error);
+  });
+});
+</script>
+{% endblock %}

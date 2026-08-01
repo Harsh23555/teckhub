@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="{% block meta_desc %}Teck Hub — Premium software development and AI solutions company. Custom software, web & mobile apps, AI/ML, cloud, DevOps, and more.{% endblock %}"
+  <title>{% block title %}Teck Hub — Future-Ready Software & AI Solutions{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+  <!-- ── HEADER ──────────────────────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <nav class="nav-container">
+      <a href="/" class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">Teck<strong>Hub</strong></span>
+      </a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="/" class="nav-link {% if request.endpoint=='index' %}active{% endif %}">Home</a></li>
+        <li class="has-dropdown">
+          <a href="/services" class="nav-link {% if request.endpoint=='services' %}active{% endif %}">Services ▾</a>
+          <div class="mega-menu">
+            <div class="mega-col">
+              <span class="mega-label">Build</span>
+              <a href="/services#custom">Custom Software</a>
+              <a href="/services#webmobile">Web & Mobile</a>
+              <a href="/services#saas">SaaS Solutions</a>
+              <a href="/services#erp">ERP & CRM</a>
+            </div>
+            <div class="mega-col">
+              <span class="mega-label">Intelligence</span>
+              <a href="/services#ai">AI & ML</a>
+              <a href="/services#blockchain">Blockchain</a>
+              <a href="/services#api">API Integration</a>
+            </div>
+            <div class="mega-col">
+              <span class="mega-label">Operate</span>
+              <a href="/services#cloud">Cloud Computing</a>
+              <a href="/services#devops">DevOps</a>
+              <a href="/services#security">Cybersecurity</a>
+              <a href="/services#maintenance">Maintenance</a>
+            </div>
+            <div class="mega-col">
+              <span class="mega-label">Design</span>
+              <a href="/services#uxui">UI/UX Design</a>
+              <a href="/services#consulting">IT Consulting</a>
+            </div>
+          </div>
+        </li>
+        <li><a href="/portfolio" class="nav-link {% if request.endpoint=='portfolio' %}active{% endif %}">Portfolio</a></li>
+        <li><a href="/technologies" class="nav-link {% if request.endpoint=='technologies' %}active{% endif %}">Technologies</a></li>
+        <li><a href="/industries" class="nav-link {% if request.endpoint=='industries_page' %}active{% endif %}">Industries</a></li>
+        <li><a href="/blog" class="nav-link {% if request.endpoint=='blog' %}active{% endif %}">Blog</a></li>
+        <li><a href="/about" class="nav-link {% if request.endpoint=='about' %}active{% endif %}">About</a></li>
+        <li><a href="/contact" class="nav-link {% if request.endpoint=='contact' %}active{% endif %}">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+          <span class="theme-icon">☀</span>
+        </button>
+        {% if session.get('user_logged_in') %}
+        <div class="has-dropdown" style="position:relative;">
+          <button class="btn btn-sm" style="background:linear-gradient(135deg,var(--violet),var(--cyan));color:#fff;border-radius:50%;width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-display);font-size:.85rem;border:none;cursor:pointer;" title="{{ session.get('user_name', 'User') }}">
+            {{ session.get('user_name', 'U')[0]|upper }}
+          </button>
+          <div class="mega-menu" style="min-width:180px;grid-template-columns:1fr;left:auto;right:0;transform:translateY(-8px);padding:0.75rem;">
+            <div class="mega-col">
+              <span class="mega-label">{{ session.get('user_name', 'User') }}</span>
+              <span style="font-size:.72rem;color:var(--text-3);margin-bottom:.5rem;display:block;">{{ session.get('user_email', '') }}</span>
+              <a href="/logout" style="color:var(--danger);font-size:.82rem;"><i class="fa-solid fa-right-from-bracket" style="margin-right:.35rem;"></i>Logout</a>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <a href="/login" class="btn btn-ghost btn-sm" style="font-size:.82rem;"><i class="fa-solid fa-user" style="font-size:.75rem;margin-right:.25rem;"></i>Login</a>
+        {% endif %}
+        <a href="/contact" class="btn btn-primary btn-sm">Get a Quote</a>
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ── MAIN ───────────────────────────────────────────────────────────────── -->
+  <main>{% block content %}{% endblock %}</main>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="logo">
+          <span class="logo-icon">⬡</span>
+          <span class="logo-text">Teck<strong>Hub</strong></span>
+        </a>
+        <p class="footer-tagline">Building the software that powers the next generation of industry leaders.</p>
+        <div class="footer-socials">
+          <a href="#" aria-label="LinkedIn" class="social-link">in</a>
+          <a href="#" aria-label="Twitter" class="social-link">𝕏</a>
+          <a href="#" aria-label="GitHub" class="social-link">⌘</a>
+          <a href="#" aria-label="YouTube" class="social-link">▶</a>
+        </div>
+      </div>
+      <div class="footer-links-grid">
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="/services#custom">Custom Software</a>
+          <a href="/services#webmobile">Web & Mobile</a>
+          <a href="/services#ai">AI & Machine Learning</a>
+          <a href="/services#cloud">Cloud Computing</a>
+          <a href="/services#devops">DevOps</a>
+          <a href="/services#security">Cybersecurity</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="/about">About Us</a>
+          <a href="/portfolio">Portfolio</a>
+          <a href="/technologies">Technologies</a>
+          <a href="/industries">Industries</a>
+          <a href="/careers">Careers</a>
+          <a href="/blog">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support & Portal</h4>
+          <a href="/contact">Contact Center</a>
+          <a href="/pricing">Pricing Plans</a>
+          <a href="/admin/login">Admin Portal</a>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms & Conditions</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Us</h4>
+          <a href="mailto:teckhubofficals@gmail.com">teckhubofficals@gmail.com</a>
+          <a href="tel:+919835928274">+91 98359 28274</a>
+          <a href="https://wa.me/919835928274?text=Hello%20TechHub%2C%20I%20need%20assistance." target="_blank" rel="noopener noreferrer">WhatsApp Chat</a>
+          <p class="footer-address">Koramangala, Bangalore 560034<br />Singapore • Dubai</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-newsletter">
+      <div class="newsletter-inner">
+        <div class="newsletter-copy">
+          <h4>NovaTech Insights</h4>
+          <p>Monthly deep-dives on AI, software architecture, and tech strategy.</p>
+        </div>
+        <form class="newsletter-form" id="newsletterForm">
+          <input type="email" placeholder="your@email.com" required class="newsletter-input" id="newsletterEmail" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+        <p class="newsletter-msg" id="newsletterMsg"></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© {{ year }} NovaTech AI Pvt. Ltd. — All rights reserved.</p>
+      <p>Built with ❤ in Bangalore.</p>
+    </div>
+  </footer>
+
+  <!-- ── FLOATING CONTACT SPEED-DIAL BAR ────────────────────────────────────── -->
+  <div class="floating-contact-bar" id="floatingContactBar">
+    <div class="floating-actions" id="floatingActions">
+      <a href="https://wa.me/919835928274?text=Hello%20TechHub%2C%20I%20need%20assistance." target="_blank" rel="noopener noreferrer" class="float-btn float-whatsapp has-tooltip" title="Chat on WhatsApp" aria-label="Chat on WhatsApp" data-tooltip="Chat on WhatsApp" data-contact-whatsapp="+91 9835928274" data-contact-message="Hello TechHub, I need assistance.">
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+      </a>
+      <a href="tel:+919835928274" class="float-btn float-phone has-tooltip" title="Call Us" aria-label="Call us">
+        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+      </a>
+      <a href="mailto:teckhubofficals@gmail.com" class="float-btn float-email has-tooltip" title="Send Email" aria-label="Send email" data-tooltip="Send Email" data-contact-email="teckhubofficals@gmail.com">
+        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+      </a>
+      <a href="/contact" class="float-btn float-form" title="Contact Form">
+        <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+      </a>
+    </div>
+    <button class="float-main-btn" id="floatMainBtn" title="Quick Contact Options">
+      ⚡
+    </button>
+  </div>
+
+  <!-- ── AI CHATBOT WIDGET ─────────────────────────────────────────────────── -->
+  <div class="chat-widget" id="chatWidget">
+    <button class="chat-toggle" id="chatToggle" aria-label="Open chat" title="Smart Assistant">
+      <span class="chat-icon-open">💬</span>
+      <span class="chat-icon-close" style="display:none">✕</span>
+    </button>
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-header">
+        <div class="chat-avatar">⬡</div>
+        <div style="flex:1;">
+          <strong>Nova Smart Assistant</strong>
+          <small>Offline AI · Instant Responses</small>
+        </div>
+        <button id="clearChatBtn" style="color:rgba(255,255,255,0.7);font-size:.75rem;background:none;border:none;cursor:pointer;" title="Clear Chat History">🗑️</button>
+        <span class="chat-online-dot"></span>
+      </div>
+
+      <!-- Quick Action Chips -->
+      <div class="chat-chips-bar" id="chatChipsBar">
+        <button class="chat-chip" data-query="pricing">💰 Pricing</button>
+        <button class="chat-chip" data-query="services">🛠 Services</button>
+        <button class="chat-chip" data-query="meeting">📅 Book Call</button>
+        <button class="chat-chip" data-query="contact">📞 Contact Info</button>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg bot">
+          <div class="msg-bubble">Hi! I'm Nova, your AI assistant. Ask me about our services, pricing, tech stack, or booking a meeting! 👋</div>
+        </div>
+      </div>
+
+      <form class="chat-input-row" id="chatForm">
+        <input type="text" id="chatInput" placeholder="Ask anything..." autocomplete="off" />
+        <button type="submit" class="chat-send">➤</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── BACK TO TOP ────────────────────────────────────────────────────────── -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

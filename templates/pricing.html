@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Pricing — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">Transparent Pricing</span>
+    <h1>Plans Built for <span class="gradient-text">Every Stage</span></h1>
+    <p>No hidden fees, no lock-ins. Pick a plan that matches where you are today — and scales with where you're going.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="pricing-grid">
+      {% for plan in plans %}
+      <div class="pricing-card {% if plan.popular %}popular{% endif %} fade-in">
+        {% if plan.badge %}<div class="popular-badge">{{ plan.badge }}</div>{% endif %}
+        <div class="plan-name">{{ plan.name }}</div>
+        <div class="plan-price">{{ plan.price }}<span>{{ plan.period }}</span></div>
+        <p class="plan-desc">
+          {% if plan.name == 'Starter' %}Perfect for early-stage startups and small teams.
+          {% elif plan.name == 'Growth' %}Ideal for scaling companies with active development.
+          {% else %}For enterprises needing full-scale, dedicated delivery.{% endif %}
+        </p>
+        <ul class="plan-features">
+          {% for f in plan.features %}<li>{{ f }}</li>{% endfor %}
+        </ul>
+        <a href="/contact?plan={{ plan.name }}" class="btn {% if plan.popular %}btn-primary{% else %}btn-secondary{% endif %}" style="width:100%;justify-content:center">{{ plan.cta }}</a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Feature comparison -->
+    <div style="margin-top:4rem" class="fade-in">
+      <div class="section-header">
+        <h3>All Plans Include</h3>
+      </div>
+      <div class="grid-3" style="margin-top:2rem">
+        {% set inclusions = [
+          {'icon':'📋','title':'Written Contracts','desc':'Clear scope, deliverables, and milestones in every agreement.'},
+          {'icon':'🔒','title':'Full IP Assignment','desc':'All code and assets belong to you from day one.'},
+          {'icon':'📊','title':'Weekly Reports','desc':'Progress updates with metrics, blockers, and next steps.'},
+          {'icon':'🔄','title':'Agile Delivery','desc':'2-week sprints with demos and retrospectives every cycle.'},
+          {'icon':'🧪','title':'QA Included','desc':'Manual and automated testing baked into every sprint.'},
+          {'icon':'📱','title':'Source Code Access','desc':'Full Git access to your repository throughout the project.'},
+        ] %}
+        {% for i in inclusions %}
+        <div class="card">
+          <div style="font-size:1.5rem;margin-bottom:.6rem">{{ i.icon }}</div>
+          <h4 style="font-size:.95rem;margin-bottom:.35rem">{{ i.title }}</h4>
+          <p style="font-size:.82rem">{{ i.desc }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ────────────────────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--bg-2)">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">FAQ</span>
+      <h2>Common <span class="gradient-text">Questions</span></h2>
+    </div>
+    <div class="faq-list">
+      {% for faq in faqs %}
+      <div class="faq-item fade-in">
+        <button class="faq-q" aria-expanded="false">
+          {{ faq.q }}
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a"><p>{{ faq.a }}</p></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <h2>Need a <span class="gradient-text">Custom Quote?</span></h2>
+      <p>Every project is unique. Tell us what you're building and we'll put together a detailed estimate within 48 hours.</p>
+      <a href="/contact" class="btn btn-primary btn-lg">Request a Custom Quote →</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

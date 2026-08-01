@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Careers — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">Join Our Team</span>
+    <h1>Build Things That <span class="gradient-text">Actually Matter</span></h1>
+    <p>We're a team of builders who care deeply about craft. If you want ownership, autonomy, and ambitious problems — you'll fit right in.</p>
+  </div>
+</section>
+
+<!-- ── PERKS ──────────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Why NovaTech</span>
+      <h2>Life at <span class="gradient-text">NovaTech AI</span></h2>
+    </div>
+    <div class="values-grid">
+      {% for v in values %}
+      <div class="value-card fade-in">
+        <div class="value-icon">{{ v.icon }}</div>
+        <h4>{{ v.title }}</h4>
+        <p>{{ v.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── PERKS DETAILED ─────────────────────────────────────────────────────────── -->
+<section class="section-sm" style="background:var(--bg-2)">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Benefits</span>
+      <h2>What You <span class="gradient-text">Get Here</span></h2>
+    </div>
+    <div class="grid-3">
+      {% set perks = [
+        {'icon':'🌍','title':'Remote-First','desc':'Work from anywhere. We have hubs in Bangalore, Singapore, and Dubai for those who want them.'},
+        {'icon':'📈','title':'Equity Options','desc':'For senior hires. You help build this company — you should share in its success.'},
+        {'icon':'🎓','title':'Learning Budget','desc':'₹50,000 / year for courses, conferences, and books. No approval bureaucracy.'},
+        {'icon':'🏥','title':'Health Coverage','desc':'Premium health insurance for you and your immediate family from Day 1.'},
+        {'icon':'🕐','title':'Flexible Hours','desc':'Core hours 11am–5pm IST. The rest is yours to manage as you see fit.'},
+        {'icon':'🚀','title':'Real Ownership','desc':'No handoff culture. You own your features from design through production.'},
+      ] %}
+      {% for p in perks %}
+      <div class="card fade-in">
+        <div style="font-size:1.75rem;margin-bottom:.75rem">{{ p.icon }}</div>
+        <h4 style="margin-bottom:.4rem">{{ p.title }}</h4>
+        <p style="font-size:.875rem">{{ p.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── JOB LISTINGS ───────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Open Roles</span>
+      <h2>Current <span class="gradient-text">Openings</span></h2>
+    </div>
+
+    <!-- Department filter -->
+    <div class="portfolio-filters fade-in" style="margin-bottom:2rem">
+      <button class="dept-filter-btn filter-btn active" data-dept="all">All Departments</button>
+      {% for dept in departments %}
+      {% if dept != 'All' %}
+      <button class="dept-filter-btn filter-btn" data-dept="{{ dept }}">{{ dept }}</button>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="jobs-list">
+      {% for job in jobs %}
+      <div class="job-card fade-in" data-dept="{{ job.dept }}">
+        <div class="job-info">
+          <div class="job-title">{{ job.title }}</div>
+          <div class="job-meta">
+            <span class="job-dept">{{ job.dept }}</span>
+            <span class="job-sep">·</span>
+            <span class="job-loc">📍 {{ job.location }}</span>
+            <span class="job-sep">·</span>
+            <span class="job-type">{{ job.type }}</span>
+          </div>
+          <p style="font-size:.85rem;margin-top:.5rem">{{ job.desc }}</p>
+          <div style="margin-top:.65rem;display:flex;flex-wrap:wrap;gap:.35rem">
+            {% for req in job.req %}
+            <span class="tag">{{ req }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="job-actions">
+          <a href="/contact?role={{ job.title }}" class="btn btn-primary btn-sm">Apply Now →</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <h2>Don't See Your <span class="gradient-text">Perfect Role?</span></h2>
+      <p>We hire talent year-round. Send us your CV and we'll reach out when something clicks.</p>
+      <a href="/contact" class="btn btn-primary btn-lg">Send Speculative Application →</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

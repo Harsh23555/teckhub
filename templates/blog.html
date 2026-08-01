@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Blog — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">NovaTech Insights</span>
+    <h1>Engineering Ideas,<br/><span class="gradient-text">Written Down</span></h1>
+    <p>Deep-dives on AI, architecture, DevOps, and tech strategy from our team of practitioners.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="portfolio-filters fade-in" style="margin-bottom:2rem">
+      <button class="blog-filter-btn filter-btn active" data-filter="all">All Articles</button>
+      {% for cat in categories %}
+      {% if cat != 'All' %}
+      <button class="blog-filter-btn filter-btn" data-filter="{{ cat }}">{{ cat }}</button>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    {% set cat_icons = {'AI & ML':'🤖','Backend':'⚙️','Frontend':'🎨','Security':'🔒','Cloud':'☁️','Design':'✏️'} %}
+    {% set cat_keys = {'AI & ML':'aiml','Backend':'backend','Frontend':'frontend','Security':'security','Cloud':'cloud','Design':'design'} %}
+    <div class="blog-grid">
+      {% for post in posts %}
+      <a href="/blog/{{ post.id }}" class="blog-card fade-in" data-category="{{ post.category }}" style="text-decoration:none;color:inherit">
+        <div class="blog-thumb cat-{{ cat_keys.get(post.category,'') }}">
+          <span style="font-size:2.5rem">{{ cat_icons.get(post.category,'📝') }}</span>
+        </div>
+        <div class="blog-body">
+          <div class="blog-meta">
+            <span class="blog-cat">{{ post.category }}</span>
+            <span class="blog-date">{{ post.date }}</span>
+            <span class="blog-read">{{ post.read }} read</span>
+          </div>
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.excerpt }}</p>
+          <div class="blog-footer">
+            <span class="blog-author">By {{ post.author }}</span>
+            <span class="blog-link">Read →</span>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <h2>Want Insights <span class="gradient-text">In Your Inbox?</span></h2>
+      <p>Monthly deep-dives from our engineering team, no spam.</p>
+      <form class="newsletter-form" id="newsletterForm" style="justify-content:center;margin-top:1.25rem">
+        <input type="email" id="newsletterEmail" class="newsletter-input" placeholder="your@email.com" required/>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+      <p id="newsletterMsg" style="margin-top:.75rem;font-size:.85rem"></p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

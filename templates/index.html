@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <canvas id="heroCanvas" class="hero-canvas"></canvas>
+  <div class="mesh-gradient"></div>
+  <div class="container" style="width:100%">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="section-label">⬡ AI-Powered Software Studio</span>
+      </div>
+      <h1>We Build Software<br/><span class="gradient-text">That Shapes Industries</span></h1>
+      <p class="hero-sub">From AI/ML systems to enterprise platforms — NovaTech delivers precision-engineered software that scales, performs, and endures.</p>
+      <div class="hero-actions">
+        <a href="/contact" class="btn btn-primary btn-lg">Start Your Project →</a>
+        <a href="/portfolio" class="btn btn-secondary btn-lg">View Our Work</a>
+      </div>
+      <div class="hero-stats">
+        {% for s in stats %}
+        <div class="stat-item">
+          <span class="stat-value" data-target="{{ s.value }}">{{ s.value }}</span>
+          <span class="stat-label">{{ s.label }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Orbit Visual -->
+    <div class="hero-visual">
+      <div class="orbit-container">
+        <div class="orbit-ring ring-1">
+          <div class="orbit-dot" style="top:12%;left:80%">🤖</div>
+        </div>
+        <div class="orbit-ring ring-2">
+          <div class="orbit-dot" style="top:5%;left:40%">☁️</div>
+        </div>
+        <div class="orbit-ring ring-3">
+          <div class="orbit-dot" style="top:50%;left:100%">⚡</div>
+        </div>
+        <div class="orbit-core">⬡</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span><div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ── MARQUEE ────────────────────────────────────────────────────────────────── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    {% set techs = ['React','Node.js','Python','TensorFlow','AWS','Flutter','PostgreSQL','Docker','Kubernetes','Go','GraphQL','PyTorch','Terraform','Next.js','FastAPI','Solidity','Redis','Elasticsearch'] %}
+    {% for t in techs %}
+    <span class="marquee-item">✦ {{ t }}</span>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ── SERVICES ───────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">What We Do</span>
+      <h2>End-to-End <span class="gradient-text">Engineering Excellence</span></h2>
+      <p>From strategy to deployment, we cover every layer of the stack — so you only need one partner.</p>
+    </div>
+    <div class="grid-3">
+      {% for s in services %}
+      <div class="card service-card fade-in fade-in-delay-{{ loop.index0 % 3 + 1 }}">
+        <div class="service-icon">{{ s.icon }}</div>
+        <h3>{{ s.title }}</h3>
+        <p style="font-size:.875rem">{{ s.desc }}</p>
+        <div class="service-tags">
+          {% for tag in s.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a href="/services" class="btn btn-secondary">View All 13 Services →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ──────────────────────────────────────────────────────────────────── -->
+<section class="section-sm" style="background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div class="stats-grid fade-in">
+      {% for s in stats %}
+      <div class="stat-cell">
+        <span class="val gradient-text" data-target="{{ s.value }}">{{ s.value }}</span>
+        <span class="lbl">{{ s.label }}</span>
+      </div>
+      {% endfor %}
+      <div class="stat-cell">
+        <span class="val gradient-text" data-target="13+">13+</span>
+        <span class="lbl">Service Areas</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PORTFOLIO PREVIEW ──────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Our Work</span>
+      <h2>Projects That <span class="gradient-text">Move the Needle</span></h2>
+      <p>A curated look at transformative products we've shipped for global clients.</p>
+    </div>
+    <div class="portfolio-grid">
+      {% set emojis = {'Fintech':'💳','Healthcare':'🏥','E-commerce':'🛒','EdTech':'📚','Logistics':'🚚','Blockchain':'⛓️'} %}
+      {% for p in portfolio %}
+      <div class="portfolio-card fade-in">
+        <div class="portfolio-thumb">
+          <span class="portfolio-thumb-emoji">{{ emojis.get(p.category, '🚀') }}</span>
+        </div>
+        <div class="portfolio-body">
+          <div class="portfolio-cat">{{ p.category }}</div>
+          <h3>{{ p.title }}</h3>
+          <p>{{ p.desc }}</p>
+          <span class="portfolio-outcome">✓ {{ p.outcome }}</span>
+          <div class="portfolio-tech">
+            {% for t in p.tech %}<span class="tag">{{ t }}</span>{% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a href="/portfolio" class="btn btn-secondary">Explore All Projects →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── TECHNOLOGIES ───────────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--bg-2)">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Tech Stack</span>
+      <h2>Built With the <span class="gradient-text">Best Tools</span></h2>
+      <p>We select technology for fitness, not familiarity — choosing what solves your problem best.</p>
+    </div>
+    <div class="tech-tabs fade-in">
+      {% for cat in tech_stack %}
+      <button class="tech-tab {% if loop.first %}active{% endif %}" data-target="{{ cat }}">{{ cat }}</button>
+      {% endfor %}
+    </div>
+    {% for cat, items in tech_stack.items() %}
+    <div class="tech-panel {% if loop.first %}active{% endif %}" data-panel="{{ cat }}">
+      {% for item in items %}
+      <span class="tech-chip">{{ item }}</span>
+      {% endfor %}
+    </div>
+    {% endfor %}
+    <div class="text-center mt-4">
+      <a href="/technologies" class="btn btn-ghost">Full Technology Profile →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── INDUSTRIES ─────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Industries</span>
+      <h2>Domain Expertise <span class="gradient-text">Across Sectors</span></h2>
+      <p>We don't just write code — we understand your industry's unique constraints and opportunities.</p>
+    </div>
+    <div class="industry-grid">
+      {% for ind in industries %}
+      <div class="industry-card fade-in">
+        <div class="industry-icon">{{ ind.icon }}</div>
+        <h3>{{ ind.name }}</h3>
+        <p>{{ ind.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ───────────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--bg-2)">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Client Stories</span>
+      <h2>Outcomes Our <span class="gradient-text">Clients Celebrate</span></h2>
+    </div>
+    <div class="testimonials-slider fade-in">
+      <div class="testimonials-track">
+        {% for t in testimonials %}
+        <div class="testimonial-slide">
+          <div class="testimonial-card">
+            <p class="testimonial-text">{{ t.text }}</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">{{ t.avatar }}</div>
+              <div>
+                <div class="author-name">{{ t.name }}</div>
+                <div class="author-role">{{ t.role }}</div>
+                <div class="stars">{% for _ in range(t.stars) %}★{% endfor %}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div style="display:flex;justify-content:center;align-items:center;gap:1rem;margin-top:1.5rem">
+        <div class="slider-arrows">
+          <button class="slider-arrow prev" aria-label="Previous">←</button>
+          <button class="slider-arrow next" aria-label="Next">→</button>
+        </div>
+        <div class="slider-controls">
+          {% for t in testimonials %}
+          <button class="slider-dot {% if loop.first %}active{% endif %}" aria-label="Slide {{ loop.index }}"></button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BLOG PREVIEW ───────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Insights</span>
+      <h2>Latest from <span class="gradient-text">NovaTech Minds</span></h2>
+      <p>Engineering deep-dives, AI research, and tech strategy from our team.</p>
+    </div>
+    {% set cat_icons = {'AI & ML':'🤖','Backend':'⚙️','Frontend':'🎨','Security':'🔒','Cloud':'☁️','Design':'✏️'} %}
+    <div class="blog-grid">
+      {% for post in blog_posts %}
+      <a href="/blog/{{ post.id }}" class="blog-card fade-in" style="text-decoration:none;color:inherit">
+        <div class="blog-thumb cat-{{ post.category.lower().replace(' & ','').replace(' ','') }}">
+          <span style="font-size:2.5rem">{{ cat_icons.get(post.category,'📝') }}</span>
+        </div>
+        <div class="blog-body">
+          <div class="blog-meta">
+            <span class="blog-cat">{{ post.category }}</span>
+            <span class="blog-date">{{ post.date }}</span>
+            <span class="blog-read">{{ post.read }}</span>
+          </div>
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.excerpt }}</p>
+          <div class="blog-footer">
+            <span class="blog-author">{{ post.author }}</span>
+            <span class="blog-link">Read →</span>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a href="/blog" class="btn btn-secondary">Read All Articles →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BAND ───────────────────────────────────────────────────────────────── -->
+<section class="section-sm">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <span class="section-label" style="margin-bottom:1rem">Ready to Build?</span>
+      <h2>Your Next Flagship Product<br/><span class="gradient-text">Starts With a Conversation</span></h2>
+      <p>Share your idea and get a detailed technical proposal within 48 hours — free of charge.</p>
+      <div class="btn-group" style="justify-content:center">
+        <a href="/contact" class="btn btn-primary btn-lg">Get a Free Proposal</a>
+        <a href="/pricing" class="btn btn-secondary btn-lg">See Pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Admin Login — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero" style="min-height:80vh;display:flex;align-items:center;justify-content:center;">
+  <div class="container" style="max-width:440px;">
+    <div class="card card-glass fade-in" style="padding:2.5rem;text-align:left;">
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <span class="logo-icon" style="font-size:2.5rem;">⬡</span>
+        <h2 style="font-size:1.5rem;margin-top:.5rem;">Admin <span class="gradient-text">Portal</span></h2>
+        <p style="font-size:.85rem;color:var(--text-3);">Sign in to manage enquiries, FAQs, and AI chatbot knowledge</p>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            <div class="form-msg {{ category }}" style="display:block;margin-bottom:1rem;">{{ msg }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form action="{{ url_for('admin_login') }}" method="POST">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" placeholder="admin" required autofocus />
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Log In to Dashboard →</button>
+      </form>
+
+      <div style="display:flex;align-items:center;gap:.75rem;margin:1rem 0;">
+        <span style="height:1px;background:var(--border);flex:1;"></span>
+        <span style="font-size:.74rem;color:var(--text-3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;">or</span>
+        <span style="height:1px;background:var(--border);flex:1;"></span>
+      </div>
+
+      <button type="button" id="googleAdminLoginBtn" class="btn btn-secondary" style="width:100%;justify-content:center;">
+        <i class="fa-brands fa-google" aria-hidden="true"></i>
+        Continue with Google
+      </button>
+      <div id="googleLoginMsg" class="form-msg" style="margin-top:.85rem;"></div>
+
+      <div style="margin-top:1.5rem;padding:.75rem;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);font-size:.78rem;color:var(--text-3);text-align:center;">
+        🔐 Credentials are managed via <code>.env</code> — Contact your system administrator.
+      </div>
+      <div id="jwtBadge" style="display:none;margin-top:.75rem;padding:.5rem .75rem;background:rgba(79,70,229,0.12);border:1px solid rgba(79,70,229,0.3);border-radius:var(--radius);font-size:.75rem;color:#a5b4fc;text-align:center;">
+        🔑 Session secured by JWT — Token stored in HttpOnly cookie
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  const firebaseConfig = {{ firebase_config|safe }};
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const loginBtn = document.getElementById('googleAdminLoginBtn');
+  const msg = document.getElementById('googleLoginMsg');
+
+  function showStatus(text, type) {
+    msg.className = 'form-msg ' + type;
+    msg.textContent = text;
+    msg.style.display = 'block';
+  }
+
+  loginBtn?.addEventListener('click', async () => {
+    loginBtn.disabled = true;
+    showStatus('Opening Google sign-in...', 'success');
+
+    try {
+      const popupResult = await signInWithPopup(auth, provider);
+      const idToken = await popupResult.user.getIdToken();
+
+      const res = await fetch('/auth/google-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || 'Google sign-in failed.');
+      }
+
+      showStatus('Login successful. Redirecting...', 'success');
+      window.location.href = data.redirect || '/admin/dashboard';
+    } catch (err) {
+      let errorMsg = err.message || 'Google sign-in failed. Please try again.';
+      if (err.code === 'auth/unauthorized-domain') {
+        errorMsg = `Domain (${window.location.hostname}) is not authorized in Firebase. Please open using http://localhost:5000 or add ${window.location.hostname} in Firebase Console -> Authentication -> Settings -> Authorized domains.`;
+      }
+      showStatus(errorMsg, 'error');
+    } finally {
+      loginBtn.disabled = false;
+    }
+  });
+</script>
+{% endblock %}

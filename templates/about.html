@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}About Us — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">About NovaTech AI</span>
+    <h1>Built by Engineers,<br/><span class="gradient-text">Driven by Outcomes</span></h1>
+    <p>We're a team of 80+ builders, thinkers, and problem-solvers creating software that makes industries faster, smarter, and more resilient.</p>
+  </div>
+</section>
+
+<!-- ── MISSION / VISION ───────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="grid-2">
+      <div class="card card-glass fade-in" style="padding:2.5rem">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🎯</div>
+        <h3 style="margin-bottom:.75rem">Our Mission</h3>
+        <p style="font-size:1rem;line-height:1.75">To accelerate the ambitions of forward-thinking companies by building software that doesn't just meet requirements — it changes what's possible.</p>
+      </div>
+      <div class="card card-glass fade-in fade-in-delay-1" style="padding:2.5rem">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🔭</div>
+        <h3 style="margin-bottom:.75rem">Our Vision</h3>
+        <p style="font-size:1rem;line-height:1.75">A world where every ambitious company, regardless of its technical capacity, has access to the same quality of engineering that powers the Fortune 500.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VALUES ─────────────────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--bg-2)">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Values</span>
+      <h2>The Principles That <span class="gradient-text">Guide Us</span></h2>
+    </div>
+    <div class="values-grid">
+      {% for v in values %}
+      <div class="value-card fade-in">
+        <div class="value-icon">{{ v.icon }}</div>
+        <h4>{{ v.title }}</h4>
+        <p>{{ v.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ──────────────────────────────────────────────────────────────────── -->
+<section class="section-sm">
+  <div class="container">
+    <div class="stats-grid fade-in">
+      <div class="stat-cell"><span class="val gradient-text" data-target="200+">200+</span><span class="lbl">Projects Shipped</span></div>
+      <div class="stat-cell"><span class="val gradient-text" data-target="80+">80+</span><span class="lbl">Team Members</span></div>
+      <div class="stat-cell"><span class="val gradient-text" data-target="3">3</span><span class="lbl">Global Offices</span></div>
+      <div class="stat-cell"><span class="val gradient-text" data-target="8+">8+</span><span class="lbl">Years Operating</span></div>
+      <div class="stat-cell"><span class="val gradient-text" data-target="98%">98%</span><span class="lbl">On-Time Delivery</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── JOURNEY TIMELINE ───────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--bg-2)">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Our Journey</span>
+      <h2>From a Shared Desk to <span class="gradient-text">Three Continents</span></h2>
+    </div>
+    <div style="max-width:640px;margin-inline:auto">
+      <div class="timeline">
+        {% for t in timeline %}
+        <div class="timeline-item fade-in">
+          <div class="timeline-year">{{ t.year }}</div>
+          <h4>{{ t.title }}</h4>
+          <p>{{ t.desc }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TEAM ───────────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">The Team</span>
+      <h2>Meet the People <span class="gradient-text">Behind the Code</span></h2>
+      <p>Every engagement is led by senior engineers and domain experts — no juniors thrown over the fence.</p>
+    </div>
+    <div class="team-grid">
+      {% for member in team %}
+      <div class="team-card fade-in">
+        <div class="team-avatar">{{ member.avatar }}</div>
+        <div class="team-name">{{ member.name }}</div>
+        <div class="team-role">{{ member.role }}</div>
+        <p class="team-bio">{{ member.bio }}</p>
+        <a href="{{ member.linkedin }}" class="social-link" style="margin-top:.85rem;display:inline-flex" aria-label="LinkedIn">in</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────────────────────────────── -->
+<section class="section-sm">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <h2>Want to Join <span class="gradient-text">Our Team?</span></h2>
+      <p>We're always looking for exceptional engineers, designers, and strategists who want to build things that matter.</p>
+      <div class="btn-group" style="justify-content:center">
+        <a href="/careers" class="btn btn-primary btn-lg">View Open Roles</a>
+        <a href="/contact" class="btn btn-secondary btn-lg">Get in Touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

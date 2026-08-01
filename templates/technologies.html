@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Technologies — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">Our Tech Stack</span>
+    <h1>Tools We <span class="gradient-text">Trust in Production</span></h1>
+    <p>We don't chase trends — we select technology based on maturity, community, and fit for the problem at hand.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    {% for cat, items in tech_stack.items() %}
+    <div style="margin-bottom:3rem" class="fade-in">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
+        <div class="highlight-bar" style="margin-bottom:0"></div>
+        <h3 style="font-size:1.15rem">{{ cat }}</h3>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:.75rem">
+        {% for item in items %}
+        <span class="tech-chip" style="font-size:.88rem;padding:.6rem 1.1rem">{{ item }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section-sm" style="background:var(--bg-2)">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <h2>Got a Specific <span class="gradient-text">Stack in Mind?</span></h2>
+      <p>We work with whatever your team is already using — or recommend the ideal stack for your requirements.</p>
+      <a href="/contact" class="btn btn-primary btn-lg">Discuss Your Stack →</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Services — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">What We Build</span>
+    <h1>13 Services,<br/><span class="gradient-text">One Unified Team</span></h1>
+    <p>Every service is backed by the same cross-functional team — no handoffs, no silos, no surprises.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid-3">
+      {% set anchors = {'Custom Software Development':'custom','Web & Mobile App Development':'webmobile','AI & Machine Learning':'ai','Cloud Computing & Migration':'cloud','DevOps & CI/CD':'devops','UI/UX Design':'uxui','API Design & Integration':'api','Cybersecurity':'security','Blockchain Development':'blockchain','SaaS Solutions':'saas','ERP & CRM Development':'erp','IT Consulting':'consulting','Software Maintenance':'maintenance'} %}
+      {% for s in services %}
+      <div class="card service-card fade-in" id="{{ anchors.get(s.title, '') }}">
+        <div class="service-icon">{{ s.icon }}</div>
+        <h3>{{ s.title }}</h3>
+        <p style="font-size:.9rem;margin-bottom:1rem">{{ s.desc }}</p>
+        <div class="service-tags">
+          {% for tag in s.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+        </div>
+        <a href="/contact?service={{ s.title }}" class="btn btn-ghost" style="margin-top:1.25rem;padding-left:0">Get a Quote →</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <h2>Don't See Exactly What <span class="gradient-text">You Need?</span></h2>
+      <p>We tailor every engagement. Tell us your challenge and we'll scope a custom solution.</p>
+      <a href="/contact" class="btn btn-primary btn-lg">Talk to Our Team →</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

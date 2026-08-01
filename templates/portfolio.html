@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Portfolio — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">Our Work</span>
+    <h1>200+ Projects.<br/><span class="gradient-text">Real Results.</span></h1>
+    <p>Every case study here represents a real problem solved, a business transformed, and an outcome measured.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="portfolio-filters fade-in">
+      <button class="filter-btn active" data-filter="all">All Projects</button>
+      {% for cat in categories %}
+      <button class="filter-btn" data-filter="{{ cat }}">{{ cat }}</button>
+      {% endfor %}
+    </div>
+    {% set emojis = {'Fintech':'💳','Healthcare':'🏥','E-commerce':'🛒','EdTech':'📚','Logistics':'🚚','Blockchain':'⛓️'} %}
+    <div class="portfolio-grid">
+      {% for p in portfolio %}
+      <div class="portfolio-card fade-in" data-category="{{ p.category }}">
+        <div class="portfolio-thumb">
+          <span class="portfolio-thumb-emoji">{{ emojis.get(p.category, '🚀') }}</span>
+        </div>
+        <div class="portfolio-body">
+          <div class="portfolio-cat">{{ p.category }}</div>
+          <h3>{{ p.title }}</h3>
+          <p>{{ p.desc }}</p>
+          <span class="portfolio-outcome">✓ {{ p.outcome }}</span>
+          <div class="portfolio-tech">
+            {% for t in p.tech %}<span class="tag">{{ t }}</span>{% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <h2>Want to Be Our <span class="gradient-text">Next Case Study?</span></h2>
+      <p>Let's build something worth showcasing.</p>
+      <a href="/contact" class="btn btn-primary btn-lg">Start a Project →</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

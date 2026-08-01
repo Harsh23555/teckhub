@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — NovaTech AI Blog{% endblock %}
+{% block meta_desc %}{{ post.excerpt }}{% endblock %}
+{% block content %}
+
+<section style="padding-top:calc(80px + 3rem);padding-bottom:0;background:var(--bg-2);border-bottom:1px solid var(--border)">
+  <div class="container" style="max-width:840px">
+    <a href="/blog" class="btn btn-ghost" style="padding-left:0;margin-bottom:1.5rem;display:inline-flex">← Back to Blog</a>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem">
+      <span class="blog-cat">{{ post.category }}</span>
+      <span class="blog-date" style="font-size:.82rem;color:var(--text-3)">{{ post.date }}</span>
+      <span class="blog-read" style="font-size:.82rem;color:var(--text-3)">{{ post.read }} read</span>
+    </div>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:1.25rem">{{ post.title }}</h1>
+    <p style="font-size:1.1rem;line-height:1.75;margin-bottom:2rem">{{ post.excerpt }}</p>
+    <div style="display:flex;align-items:center;gap:.85rem;padding:1.25rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+      <div class="author-avatar" style="width:44px;height:44px;font-size:.8rem;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--cyan));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-family:var(--font-display)">
+        {{ post.author.split()[0][0] }}{{ post.author.split()[-1][0] if post.author.split()|length > 1 else '' }}
+      </div>
+      <div>
+        <div style="font-weight:600;font-size:.9rem;font-family:var(--font-display)">{{ post.author }}</div>
+        <div style="font-size:.78rem;color:var(--text-3)">NovaTech AI Engineering Team</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width:840px">
+    <div style="display:grid;grid-template-columns:1fr 220px;gap:3rem;align-items:start">
+      <!-- Article body -->
+      <div class="legal-content" style="line-height:1.85">
+        <p>{{ post.excerpt }} This is the full article content that would be loaded from a CMS in production — Sanity, Strapi, or MDX would power this in a live deployment.</p>
+
+        <h2>The Problem We're Solving</h2>
+        <p>Every engineering team eventually hits a wall where their current approach doesn't scale — either technically, organizationally, or both. The article explores how leading teams have navigated this inflection point using the principles and tools we'll discuss throughout.</p>
+        <p>Understanding the root cause is more than half the battle. Teams that treat symptoms (adding more servers, rewriting in a trendier language) without diagnosing the real constraint tend to hit the same wall again, slightly further down the road.</p>
+
+        <h2>The Architecture That Changed Our Thinking</h2>
+        <p>When we first encountered this problem on a large fintech project, our initial instinct was to reach for familiar tools. What we found instead was that the constraints of the domain demanded a fundamentally different mental model — one that prioritized data consistency over developer convenience.</p>
+        <p>The key insight: distributed systems don't fail rarely and catastrophically. They fail constantly and partially. Building for that reality means designing every component to be independently deployable, observable, and degradable.</p>
+
+        <h2>Implementation: A Step-by-Step Walkthrough</h2>
+        <p>We'll walk through a concrete example using a real pattern from one of our client engagements. The names are changed but the architecture is real and in production serving millions of requests daily.</p>
+
+        <h3>Step 1: Identify Your Boundaries</h3>
+        <p>Domain-driven design gives us the vocabulary here. Bounded contexts are not technical divisions — they're organizational ones. The team that owns the code should own the concept.</p>
+
+        <h3>Step 2: Make Communication Explicit</h3>
+        <p>Every inter-service call is a contract. Treat it as such. Define the interface before writing a line of implementation. This sounds slow — in practice it saves weeks of integration debugging.</p>
+
+        <h3>Step 3: Instrument Everything</h3>
+        <p>You cannot optimize what you cannot measure. Before you go live, instrument latency, error rates, and saturation for every service boundary. Set alerts before users discover your issues.</p>
+
+        <h2>Results We Measured</h2>
+        <p>After applying these principles to the fintech platform, we measured a 40% reduction in mean time to recovery (MTTR), a 3x improvement in deployment frequency, and a significant reduction in change failure rate. The numbers aligned closely with DORA metrics benchmarks for elite performers.</p>
+
+        <h2>What This Means for Your Team</h2>
+        <p>The patterns described here aren't magic, and they're not universally applicable. A three-person startup building an MVP should not adopt event-sourced microservices. But a team of 20+ shipping multiple times per week with growing infrastructure costs and increasing on-call burden? The investment pays for itself within two quarters.</p>
+
+        <div style="background:var(--violet-dim);border-left:3px solid var(--violet);padding:1.25rem 1.5rem;border-radius:0 var(--radius) var(--radius) 0;margin:2rem 0">
+          <p style="color:var(--text);font-style:italic;margin:0">"The biggest risk in software isn't moving too fast — it's moving fast in the wrong direction. Architectural clarity is what lets you move fast with confidence."</p>
+        </div>
+
+        <h2>Conclusion</h2>
+        <p>The journey from a tangled monolith to a well-structured, observable system is rarely a single refactor. It's a series of deliberate, incremental improvements guided by a clear architectural vision and ruthlessly measured outcomes. The teams that get there don't have better tools — they have better habits.</p>
+        <p>If you're facing these challenges and want to talk through your specific situation, <a href="/contact" style="color:var(--violet-light)">our team is always happy to have a no-commitment conversation</a>.</p>
+      </div>
+
+      <!-- Sidebar -->
+      <aside style="position:sticky;top:100px">
+        <div class="card" style="padding:1.5rem;margin-bottom:1.5rem">
+          <h4 style="font-size:.875rem;margin-bottom:1rem">Share This Article</h4>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <a href="https://twitter.com/intent/tweet?text={{ post.title }}" target="_blank" class="btn btn-secondary btn-sm">𝕏 Tweet</a>
+            <a href="https://www.linkedin.com/shareArticle?title={{ post.title }}" target="_blank" class="btn btn-secondary btn-sm">in Share</a>
+          </div>
+        </div>
+        <div class="card" style="padding:1.5rem">
+          <h4 style="font-size:.875rem;margin-bottom:1rem">About the Author</h4>
+          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--cyan));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-family:var(--font-display);font-size:.8rem;flex-shrink:0">
+              {{ post.author.split()[0][0] }}{{ post.author.split()[-1][0] if post.author.split()|length > 1 else '' }}
+            </div>
+            <div>
+              <div style="font-weight:600;font-size:.875rem;font-family:var(--font-display)">{{ post.author }}</div>
+              <div style="font-size:.75rem;color:var(--text-3)">NovaTech AI</div>
+            </div>
+          </div>
+          <p style="font-size:.8rem">Engineering lead and technical writer covering distributed systems, AI, and software craft.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- Related Posts -->
+<section class="section-sm" style="background:var(--bg-2);border-top:1px solid var(--border)">
+  <div class="container">
+    <div class="section-header fade-in" style="margin-bottom:2rem">
+      <h3>Continue Reading</h3>
+    </div>
+    {% set cat_icons = {'AI & ML':'🤖','Backend':'⚙️','Frontend':'🎨','Security':'🔒','Cloud':'☁️','Design':'✏️'} %}
+    {% set cat_keys  = {'AI & ML':'aiml','Backend':'backend','Frontend':'frontend','Security':'security','Cloud':'cloud','Design':'design'} %}
+    <div class="blog-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">
+      {% for r in related %}
+      <a href="/blog/{{ r.id }}" class="blog-card fade-in" style="text-decoration:none;color:inherit">
+        <div class="blog-thumb cat-{{ cat_keys.get(r.category,'') }}">
+          <span style="font-size:2rem">{{ cat_icons.get(r.category,'📝') }}</span>
+        </div>
+        <div class="blog-body">
+          <div class="blog-meta">
+            <span class="blog-cat">{{ r.category }}</span>
+            <span class="blog-read">{{ r.read }}</span>
+          </div>
+          <h3>{{ r.title }}</h3>
+          <div class="blog-footer">
+            <span class="blog-author">{{ r.author }}</span>
+            <span class="blog-link">Read →</span>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

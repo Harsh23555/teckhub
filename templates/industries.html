@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Industries — NovaTech AI{% endblock %}
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">Domain Expertise</span>
+    <h1>We Speak Your <span class="gradient-text">Industry's Language</span></h1>
+    <p>Generic software agencies build features. We build for your domain's specific constraints, regulations, and users.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="industry-grid">
+      {% for ind in industries %}
+      <div class="industry-card fade-in">
+        <div class="industry-icon">{{ ind.icon }}</div>
+        <h3>{{ ind.name }}</h3>
+        <p>{{ ind.desc }}</p>
+        <a href="/contact?industry={{ ind.name }}" class="btn btn-ghost" style="margin-top:1rem;padding-left:0;font-size:.82rem">Explore Solutions →</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="cta-band fade-in">
+      <h2>Your Industry,<br/><span class="gradient-text">Our Expertise</span></h2>
+      <p>Don't see your sector? We've worked across 20+ verticals. Let's talk.</p>
+      <a href="/contact" class="btn btn-primary btn-lg">Get in Touch →</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

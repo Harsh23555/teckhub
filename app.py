@@ -796,14 +796,18 @@ def auth_google_user():
     if not existing:
         try:
             conn.execute(
-                "INSERT INTO users (name, email, auth_provider, avatar_url, email_verified, username) VALUES (?, ?, 'google', ?, TRUE, ?)",
+                "INSERT INTO users (name, email, password_hash, auth_provider, avatar_url, email_verified, username) VALUES (?, ?, '', 'google', ?, TRUE, ?)",
                 (user_name, user_email, user_picture, user_email)
             )
-        except Exception:
-            conn.execute(
-                "INSERT INTO users (name, email, auth_provider, avatar_url, email_verified) VALUES (?, ?, 'google', ?, TRUE)",
-                (user_name, user_email, user_picture)
-            )
+        except Exception as insert_err:
+            print("[WARN] Google user primary insert fallback:", insert_err)
+            try:
+                conn.execute(
+                    "INSERT INTO users (name, email, password_hash, auth_provider, avatar_url, email_verified) VALUES (?, ?, '', 'google', ?, TRUE)",
+                    (user_name, user_email, user_picture)
+                )
+            except Exception as secondary_err:
+                print("[WARN] Google user secondary insert fallback:", secondary_err)
         conn.commit()
     conn.close()
 
@@ -1014,17 +1018,29 @@ def is_api_request():
         or any(request.path.startswith(prefix) for prefix in ["/auth/", "/admin/", "/chat", "/contact", "/meeting/", "/faq/", "/newsletter"])
     )
 
+def get_index_context():
+    return {
+        "stats": stats,
+        "services": services_data[:6],
+        "testimonials": testimonials,
+        "tech_stack": tech_stack,
+        "industries": industries,
+        "blog_posts": blog_posts[:3],
+        "portfolio": portfolio_items[:3],
+        "year": datetime.now().year
+    }
+
 @app.errorhandler(404)
 def handle_404(e):
     if is_api_request():
         return jsonify({"ok": False, "error": "The requested API endpoint was not found (404)."}), 404
-    return render_template("index.html", year=datetime.now().year), 404
+    return render_template("index.html", **get_index_context()), 404
 
 @app.errorhandler(500)
 def handle_500(e):
     if is_api_request():
         return jsonify({"ok": False, "error": "Internal server error (500). Please try again later."}), 500
-    return render_template("index.html", year=datetime.now().year), 500
+    return render_template("index.html", **get_index_context()), 500
 
 @app.errorhandler(Exception)
 def handle_exception(e):
@@ -1040,7 +1056,7 @@ def handle_exception(e):
     if is_api_request():
         err_msg = str(e) if (app.debug or str(e)) else "An internal server error occurred. Please try again."
         return jsonify({"ok": False, "error": err_msg}), 500
-    return render_template("index.html", year=datetime.now().year), 500
+    return render_template("index.html", **get_index_context()), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

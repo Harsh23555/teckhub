@@ -58,6 +58,12 @@ class UnifiedConnection:
             self.conn = sqlite3.connect(self.db_url if self.db_url.endswith(".db") else "novatech.db")
             self.conn.row_factory = sqlite3.Row
 
+    def rollback(self):
+        try:
+            self.conn.rollback()
+        except Exception:
+            pass
+
     def execute(self, query, params=()):
         if self.is_postgres:
             try:
@@ -71,6 +77,9 @@ class UnifiedConnection:
                 pg_query = query.replace("?", "%s")
                 pg_query = pg_query.replace("datetime('now', '-2 minutes')", "NOW() - INTERVAL '2 minutes'")
                 cursor.execute(pg_query, params)
+            except Exception as e:
+                self.rollback()
+                raise e
         else:
             cursor = self.conn.cursor()
             cursor.execute(query, params)
@@ -88,9 +97,14 @@ class UnifiedConnection:
                 cursor = self.conn.cursor()
                 pg_query = query.replace("?", "%s")
                 cursor.executemany(pg_query, params_list)
+            except Exception as e:
+                self.rollback()
+                raise e
         else:
             cursor = self.conn.cursor()
             cursor.executemany(query, params_list)
+
+        return UnifiedCursor(cursor, self.is_postgres)
 
     def commit(self):
         try:
@@ -227,10 +241,18 @@ def init_db():
         except Exception:
             pass
 
-    # Legacy fix for Neon DB if 'username' column exists with NOT NULL
+    # Legacy fix for Neon DB if 'username' or 'password_hash' column exists with NOT NULL
     try:
         c = get_db_connection()
         c.execute("ALTER TABLE users ALTER COLUMN username DROP NOT NULL")
+        c.commit()
+        c.close()
+    except Exception:
+        pass
+
+    try:
+        c = get_db_connection()
+        c.execute("ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL")
         c.commit()
         c.close()
     except Exception:

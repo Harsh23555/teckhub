@@ -992,5 +992,40 @@ def newsletter_sub():
     conn.close()
     return jsonify({"ok":True,"message":"You're subscribed! Welcome to NovaTech Insights."})
 
+# ── Global Error Handlers (Return JSON for API/AJAX/POST requests) ─────────────
+def is_api_request():
+    return (
+        request.is_json
+        or request.method == "POST"
+        or request.headers.get("Accept") == "application/json"
+        or request.headers.get("X-Requested-With") == "XMLHttpRequest"
+        or any(request.path.startswith(prefix) for prefix in ["/auth/", "/admin/", "/chat", "/contact", "/meeting/", "/faq/", "/newsletter"])
+    )
+
+@app.errorhandler(404)
+def handle_404(e):
+    if is_api_request():
+        return jsonify({"ok": False, "error": "The requested API endpoint was not found (404)."}), 404
+    return render_template("index.html", year=datetime.now().year), 404
+
+@app.errorhandler(500)
+def handle_500(e):
+    if is_api_request():
+        return jsonify({"ok": False, "error": "Internal server error (500). Please try again later."}), 500
+    return render_template("index.html", year=datetime.now().year), 500
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Pass through standard HTTP errors (like 404, 500 handled above)
+    from werkzeug.exceptions import HTTPException
+    if isinstance(e, HTTPException):
+        if is_api_request():
+            return jsonify({"ok": False, "error": f"{e.description} ({e.code})"}), e.code
+        return e
+    print(f"[ERROR] Unhandled Server Exception: {e}")
+    if is_api_request():
+        return jsonify({"ok": False, "error": "An internal server error occurred. Please try again."}), 500
+    return render_template("index.html", year=datetime.now().year), 500
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

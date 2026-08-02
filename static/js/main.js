@@ -270,6 +270,22 @@ document.querySelectorAll('.dept-filter-btn').forEach(btn => {
   });
 });
 
+/* ── SAFE JSON PARSE HELPER ─────────────────────────────────────────────────── */
+async function safeJsonParse(res) {
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    try {
+      return await res.json();
+    } catch (e) {
+      return { ok: false, error: 'Malformed JSON response from server.' };
+    }
+  }
+  if (res.status === 401) return { ok: false, error: 'Authentication required.' };
+  if (res.status === 404) return { ok: false, error: 'Endpoint not found (404).' };
+  if (res.status >= 500) return { ok: false, error: 'Server error (' + res.status + '). Please try again later.' };
+  return { ok: false, error: 'Unexpected server response (' + res.status + ').' };
+}
+
 /* ── CONTACT FORM ────────────────────────────────────────────────────────────── */
 const contactForm = document.getElementById('contactForm');
 const formMsg     = document.getElementById('formMsg');
@@ -278,13 +294,16 @@ contactForm?.addEventListener('submit', async e => {
   const btn = contactForm.querySelector('[type=submit]');
   btn.disabled = true; btn.textContent = 'Sending…';
   try {
-    const res = await fetch('/contact', { method: 'POST', body: new FormData(contactForm) });
+    const res = await fetch('/contact', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(contactForm)
+    });
     if (res.status === 401) {
-      // Not authenticated — redirect to login page
       window.location.href = '/login';
       return;
     }
-    const data = await res.json();
+    const data = await safeJsonParse(res);
     formMsg.className = 'form-msg ' + (data.ok ? 'success' : 'error');
     formMsg.textContent = data.ok ? data.message : data.error;
     if (data.ok) contactForm.reset();
@@ -301,8 +320,12 @@ document.getElementById('newsletterForm')?.addEventListener('submit', async e =>
   const email = document.getElementById('newsletterEmail').value;
   const msg   = document.getElementById('newsletterMsg');
   try {
-    const res  = await fetch('/newsletter', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email }) });
-    const data = await res.json();
+    const res  = await fetch('/newsletter', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await safeJsonParse(res);
     msg.textContent = data.message || data.error;
     msg.style.color = data.ok ? 'var(--success)' : 'var(--danger)';
     if (data.ok) document.getElementById('newsletterEmail').value = '';
@@ -414,12 +437,12 @@ document.getElementById('newsletterForm')?.addEventListener('submit', async e =>
     try {
       const res = await fetch('/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ message: text })
       });
-      const data = await res.json();
+      const data = await safeJsonParse(res);
       typing.remove();
-      appendMsgElement(data.reply, 'bot', data.actions || null, true);
+      appendMsgElement(data.reply || 'Sorry, I am unable to process that right now.', 'bot', data.actions || null, true);
     } catch {
       typing.remove();
       appendMsgElement('Sorry, I\'m having trouble connecting to my database. Please reach out to teckhubofficals@gmail.com', 'bot', null, true);

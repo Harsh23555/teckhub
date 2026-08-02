@@ -359,6 +359,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  async function parseJsonResponse(res) {
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      try {
+        return await res.json();
+      } catch (e) {
+        return { ok: false, error: 'Malformed JSON response from server.' };
+      }
+    }
+    if (res.status === 401) return { ok: false, error: 'Admin session expired. Please log in again.' };
+    if (res.status === 404) return { ok: false, error: 'Endpoint not found (404).' };
+    if (res.status >= 500) return { ok: false, error: 'Server error (' + res.status + '). Please try again later.' };
+    return { ok: false, error: 'Unexpected server response (' + res.status + ').' };
+  }
+
   // Delete Action
   document.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
@@ -373,9 +388,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const fd = new FormData();
       fd.append('id', id);
-      const res = await fetch(url, { method: 'POST', body: fd });
-      const data = await res.json();
+      const res = await fetch(url, { method: 'POST', headers: { 'Accept': 'application/json' }, body: fd });
+      const data = await parseJsonResponse(res);
       if (data.ok) location.reload();
+      else alert(data.error || 'Failed to delete record.');
     });
   });
 
@@ -439,10 +455,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('closeFaqModal')?.addEventListener('click', () => { faqModal.style.display = 'none'; });
   document.getElementById('faqForm')?.addEventListener('submit', async e => {
     e.preventDefault();
-    const res = await fetch('/admin/faq/save', { method: 'POST', body: new FormData(e.target) });
-    const data = await res.json();
+    const res = await fetch('/admin/faq/save', { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(e.target) });
+    const data = await parseJsonResponse(res);
     if (data.ok) location.reload();
-    else alert(data.error);
+    else alert(data.error || 'Failed to save FAQ.');
   });
 
   // Knowledge Modal Add & Edit
@@ -467,10 +483,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('closeKnowledgeModal')?.addEventListener('click', () => { knowledgeModal.style.display = 'none'; });
   document.getElementById('knowledgeForm')?.addEventListener('submit', async e => {
     e.preventDefault();
-    const res = await fetch('/admin/chat-knowledge/save', { method: 'POST', body: new FormData(e.target) });
-    const data = await res.json();
+    const res = await fetch('/admin/chat-knowledge/save', { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(e.target) });
+    const data = await parseJsonResponse(res);
     if (data.ok) location.reload();
-    else alert(data.error);
+    else alert(data.error || 'Failed to save keyword response.');
   });
 });
 </script>

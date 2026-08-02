@@ -77,17 +77,31 @@
     loginBtn.disabled = true;
     showStatus('Opening Google sign-in...', 'success');
 
+    async function parseJsonResponse(res) {
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        try {
+          return await res.json();
+        } catch (e) {
+          return { ok: false, error: 'Server returned invalid response format.' };
+        }
+      }
+      if (res.status === 404) return { ok: false, error: 'Authentication endpoint not found (404).' };
+      if (res.status >= 500) return { ok: false, error: 'Server error (' + res.status + '). Please try again.' };
+      return { ok: false, error: 'Unexpected server response (' + res.status + ').' };
+    }
+
     try {
       const popupResult = await signInWithPopup(auth, provider);
       const idToken = await popupResult.user.getIdToken();
 
       const res = await fetch('/auth/google-login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ idToken })
       });
 
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
       if (!res.ok || !data.ok) {
         throw new Error(data.error || 'Google sign-in failed.');
       }
@@ -98,6 +112,8 @@
       let errorMsg = err.message || 'Google sign-in failed. Please try again.';
       if (err.code === 'auth/unauthorized-domain') {
         errorMsg = `Domain (${window.location.hostname}) is not authorized in Firebase. Please open using http://localhost:5000 or add ${window.location.hostname} in Firebase Console -> Authentication -> Settings -> Authorized domains.`;
+      } else if (errorMsg.includes('Unexpected token') || errorMsg.includes('is not valid JSON')) {
+        errorMsg = 'Server error. Please try again later.';
       }
       showStatus(errorMsg, 'error');
     } finally {

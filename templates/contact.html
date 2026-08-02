@@ -449,9 +449,31 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.disabled = true;
     submitBtn.querySelector('.btn-text').textContent = 'Submitting...';
 
+    async function parseJsonResponse(res) {
+      if (res.status === 401) {
+        window.location.href = '/login';
+        return { ok: false, error: 'Please log in first.' };
+      }
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        try {
+          return await res.json();
+        } catch (e) {
+          return { ok: false, error: 'Server returned invalid response format.' };
+        }
+      }
+      if (res.status === 404) return { ok: false, error: 'Endpoint not found (404).' };
+      if (res.status >= 500) return { ok: false, error: 'Server error (' + res.status + '). Please try again.' };
+      return { ok: false, error: 'Unexpected server response (' + res.status + ').' };
+    }
+
     try {
-      const res = await fetch('/contact', { method: 'POST', body: new FormData(cForm) });
-      const data = await res.json();
+      const res = await fetch('/contact', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(cForm)
+      });
+      const data = await parseJsonResponse(res);
 
       if (data.ok) {
         // Clear draft
@@ -497,8 +519,12 @@ document.addEventListener('DOMContentLoaded', () => {
     mSubmitBtn.textContent = 'Scheduling...';
 
     try {
-      const res = await fetch('/meeting/request', { method: 'POST', body: new FormData(mForm) });
-      const data = await res.json();
+      const res = await fetch('/meeting/request', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(mForm)
+      });
+      const data = await parseJsonResponse(res);
       mMsg.className = 'form-msg ' + (data.ok ? 'success' : 'error');
       mMsg.textContent = data.ok ? data.message : data.error;
       if (data.ok) mForm.reset();

@@ -44,8 +44,14 @@ class UnifiedConnection:
 
     def _connect(self):
         if self.is_postgres:
-            clean_url = self.db_url.replace("&channel_binding=require", "").replace("channel_binding=require&", "")
-            self.conn = psycopg2.connect(clean_url)
+            try:
+                clean_url = self.db_url.replace("&channel_binding=require", "").replace("channel_binding=require&", "")
+                self.conn = psycopg2.connect(clean_url)
+            except Exception as err:
+                print(f"[WARN] PostgreSQL connection failed: {err}. Falling back to local SQLite.")
+                self.is_postgres = False
+                self.conn = sqlite3.connect("novatech.db")
+                self.conn.row_factory = sqlite3.Row
         else:
             self.conn = sqlite3.connect(self.db_url if self.db_url.endswith(".db") else "novatech.db")
             self.conn.row_factory = sqlite3.Row

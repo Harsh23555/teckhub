@@ -737,6 +737,20 @@
     });
   }
 
+  async function parseJsonResponse(res) {
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      try {
+        return await res.json();
+      } catch (e) {
+        return { ok: false, error: 'Server returned invalid response format.' };
+      }
+    }
+    if (res.status === 404) return { ok: false, error: 'Authentication endpoint not found (404).' };
+    if (res.status >= 500) return { ok: false, error: 'Server error (' + res.status + '). Please try again.' };
+    return { ok: false, error: 'Unexpected server response (' + res.status + ').' };
+  }
+
   function showMessage(text, type) {
     msgIcon.textContent = type === 'success' ? '✓' : '✕';
     msgText.textContent = text;
@@ -790,10 +804,10 @@
       const endpoint = AUTH_MODE === 'register' ? '/register' : '/login';
       const res = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
 
       if (!res.ok || !data.ok) {
         throw new Error(data.error || 'Authentication failed.');
@@ -804,7 +818,11 @@
         window.location.href = data.redirect || '/';
       }, 800);
     } catch (err) {
-      showMessage(err.message || 'Something went wrong. Please try again.', 'error');
+      let displayMsg = err.message || 'Something went wrong. Please try again.';
+      if (displayMsg.includes('Unexpected token') || displayMsg.includes('is not valid JSON')) {
+        displayMsg = 'Server error. Please try again later.';
+      }
+      showMessage(displayMsg, 'error');
       setLoading(submitBtn, false);
     }
   });
@@ -820,11 +838,11 @@
 
       const res = await fetch('/auth/google-user', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ idToken }),
       });
 
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
       if (!res.ok || !data.ok) {
         throw new Error(data.error || 'Google authentication failed.');
       }
@@ -838,6 +856,8 @@
         let errorMsg = err.message || 'Google sign-in failed.';
         if (err.code === 'auth/unauthorized-domain') {
           errorMsg = `Domain (${window.location.hostname}) is not authorized in Firebase. Please open the website using http://localhost:5000 or add ${window.location.hostname} in Firebase Console -> Authentication -> Settings -> Authorized domains.`;
+        } else if (errorMsg.includes('Unexpected token') || errorMsg.includes('is not valid JSON')) {
+          errorMsg = 'Server error. Please try again later.';
         }
         showMessage(errorMsg, 'error');
       }

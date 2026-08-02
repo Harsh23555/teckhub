@@ -704,17 +704,17 @@ def user_login():
 
         if not user:
             return jsonify({"ok": False, "error": "No account found with this email. Please sign up first."}), 401
-        if user["auth_provider"] == "google":
+        if user.get("auth_provider") == "google":
             return jsonify({"ok": False, "error": "This account uses Google sign-in. Please use the Google button."}), 401
-        if user["password_hash"] != hash_password(password):
+        if user.get("password_hash") != hash_password(password):
             return jsonify({"ok": False, "error": "Incorrect password. Please try again."}), 401
 
         session["user_logged_in"] = True
-        session["user_email"] = user["email"]
-        session["user_name"] = user["name"]
+        session["user_email"] = user.get("email", email)
+        session["user_name"] = user.get("name", "User")
         session["user_avatar"] = user.get("avatar_url", "")
 
-        return jsonify({"ok": True, "redirect": url_for("index"), "message": f"Welcome back, {user['name']}!"})
+        return jsonify({"ok": True, "redirect": url_for("index"), "message": f"Welcome back, {user.get('name', 'User')}!"})
 
     return render_template(
         "user_auth.html",
@@ -750,10 +750,16 @@ def user_register():
             conn.close()
             return jsonify({"ok": False, "error": "An account with this email already exists. Try logging in."}), 409
 
-        conn.execute(
-            "INSERT INTO users (name, email, password_hash, auth_provider, username) VALUES (?, ?, ?, 'email', ?)",
-            (name, email, hash_password(password), email)
-        )
+        try:
+            conn.execute(
+                "INSERT INTO users (name, email, password_hash, auth_provider, username) VALUES (?, ?, ?, 'email', ?)",
+                (name, email, hash_password(password), email)
+            )
+        except Exception:
+            conn.execute(
+                "INSERT INTO users (name, email, password_hash, auth_provider) VALUES (?, ?, ?, 'email')",
+                (name, email, hash_password(password))
+            )
         conn.commit()
         conn.close()
 
@@ -788,10 +794,16 @@ def auth_google_user():
     conn = get_db_connection()
     existing = conn.execute("SELECT id FROM users WHERE email = ?", (user_email,)).fetchone()
     if not existing:
-        conn.execute(
-            "INSERT INTO users (name, email, auth_provider, avatar_url, email_verified, username) VALUES (?, ?, 'google', ?, TRUE, ?)",
-            (user_name, user_email, user_picture, user_email)
-        )
+        try:
+            conn.execute(
+                "INSERT INTO users (name, email, auth_provider, avatar_url, email_verified, username) VALUES (?, ?, 'google', ?, TRUE, ?)",
+                (user_name, user_email, user_picture, user_email)
+            )
+        except Exception:
+            conn.execute(
+                "INSERT INTO users (name, email, auth_provider, avatar_url, email_verified) VALUES (?, ?, 'google', ?, TRUE)",
+                (user_name, user_email, user_picture)
+            )
         conn.commit()
     conn.close()
 
@@ -1022,9 +1034,12 @@ def handle_exception(e):
         if is_api_request():
             return jsonify({"ok": False, "error": f"{e.description} ({e.code})"}), e.code
         return e
+    import traceback
+    traceback.print_exc()
     print(f"[ERROR] Unhandled Server Exception: {e}")
     if is_api_request():
-        return jsonify({"ok": False, "error": "An internal server error occurred. Please try again."}), 500
+        err_msg = str(e) if (app.debug or str(e)) else "An internal server error occurred. Please try again."
+        return jsonify({"ok": False, "error": err_msg}), 500
     return render_template("index.html", year=datetime.now().year), 500
 
 if __name__ == "__main__":

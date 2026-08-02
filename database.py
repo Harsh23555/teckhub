@@ -15,8 +15,10 @@ class DictRow(dict):
     
     def __getitem__(self, item):
         if isinstance(item, int):
-            return self[self._keys[item]]
-        return super().__getitem__(item)
+            if 0 <= item < len(self._keys):
+                return self[self._keys[item]]
+            return None
+        return self.get(item, None)
 
 class UnifiedCursor:
     def __init__(self, cursor, is_postgres):
@@ -189,6 +191,7 @@ def init_db():
         auth_provider VARCHAR(50) DEFAULT 'email',
         avatar_url TEXT,
         email_verified BOOLEAN DEFAULT FALSE,
+        username VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
@@ -212,7 +215,8 @@ def init_db():
         ("password_hash", "VARCHAR(255)"),
         ("auth_provider", "VARCHAR(50) DEFAULT 'email'"),
         ("avatar_url", "TEXT"),
-        ("email_verified", "BOOLEAN DEFAULT FALSE")
+        ("email_verified", "BOOLEAN DEFAULT FALSE"),
+        ("username", "VARCHAR(255)")
     ]
     for col_name, col_def in extra_cols:
         try:
